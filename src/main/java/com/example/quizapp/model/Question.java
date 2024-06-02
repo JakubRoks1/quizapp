@@ -1,7 +1,5 @@
 package com.example.quizapp.model;
 
-
-import javax.persistence.*;
 import lombok.Data;
 
 import jakarta.persistence.Entity;
