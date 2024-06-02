@@ -1,20 +1,23 @@
 package com.example.quizapp.model;
 
+
+import javax.persistence.*;
 import lombok.Data;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 @Data
 public class Question {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String question;
+    private String questionText;
+    private String answer;
 
-    private String answer1;
-
-    private String answer2;
-
-    private String answer3;
-
-    private String answer4;
-
-    private String correctAnswer;
+    // Getters and setters
 }
