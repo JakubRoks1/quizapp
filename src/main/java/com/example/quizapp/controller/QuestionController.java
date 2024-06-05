@@ -10,8 +10,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/questions")
 public class QuestionController {
+
+    private final QuestionRepository questionRepository;
+
     @Autowired
-    private QuestionRepository questionRepository;
+    public QuestionController(QuestionRepository questionRepository) {
+        this.questionRepository = questionRepository;
+    }
 
     @PostMapping
     public Question createQuestion(@RequestBody Question question) {
