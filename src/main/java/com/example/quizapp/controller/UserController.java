@@ -1,6 +1,7 @@
 package com.example.quizapp.controller;
 
 import com.example.quizapp.model.User;
+import com.example.quizapp.repository.QuestionRepository;
 import com.example.quizapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +11,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @PostMapping
     public User createUser(@RequestBody User user) {
