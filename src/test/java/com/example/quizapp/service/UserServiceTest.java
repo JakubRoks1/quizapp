@@ -1,8 +1,6 @@
 package com.example.quizapp.service;
 
-import com.example.quizapp.model.Question;
 import com.example.quizapp.model.User;
-import com.example.quizapp.repository.QuestionRepository;
 import com.example.quizapp.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +13,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
+
 public class UserServiceTest {
 
     @Mock
