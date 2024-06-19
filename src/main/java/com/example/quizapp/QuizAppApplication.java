@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // questions - to zwraca wszystkie pytania [X]
 // 2) poczyscic poma [X]
 // 3) zmienić posta Usera by używać requestParam - http://localhost:8080/users/?id=1&username=Mateusz&password=abc&email=abc@wp.pl (email Opcjonalny/null) i defaultValue [X]
-// 4) get na usery za pomoca response Entity jak nie ma nic to kod 204 jak jest to kod 200
+// 4) get na usery za pomoca response Entity jak nie ma nic to kod 204 jak jest to kod 200 [x]
 @SpringBootApplication
 public class QuizAppApplication {
 
