@@ -1,4 +1,4 @@
-package com.example.quizapp.model;
+package com.example.quizapp.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,11 +8,11 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Question {
+public class ScoreEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String questionText;
-    private String answer;
+    private int score;
+    private String username;
 }

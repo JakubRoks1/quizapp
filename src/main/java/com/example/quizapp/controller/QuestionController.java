@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -26,11 +27,12 @@ public class QuestionController {
     }
 
     @GetMapping
-    public List<Question> getAllQuestions() {
+    public List<Question> getAllQuestions(@RequestHeader Map<String, String> headerAbc) {
+        System.out.println(headerAbc);
         return questionRepository.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Question> getQuestionById(@PathVariable Long id) {
         Optional<Question> question = questionRepository.findById(id);
         if (question.isPresent()) {
