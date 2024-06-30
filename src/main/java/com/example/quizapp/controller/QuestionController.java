@@ -41,4 +41,24 @@ public class QuestionController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Question> updateQuestion(@PathVariable Long id, @RequestBody Question questionDetails) {
+        return questionRepository.findById(id)
+                .map(question -> {
+                    question.setQuestionText(questionDetails.getQuestionText());
+                    question.setAnswer(questionDetails.getAnswer());
+                    Question updatedQuestion = questionRepository.save(question);
+                    return ResponseEntity.ok().body(updatedQuestion);
+                }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteQuestion(@PathVariable Long id) {
+        return questionRepository.findById(id)
+                .map(question -> {
+                    questionRepository.delete(question);
+                    return ResponseEntity.ok().build();
+                }).orElse(ResponseEntity.notFound().build());
+    }
 }
