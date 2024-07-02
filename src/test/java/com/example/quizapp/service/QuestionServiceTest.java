@@ -94,8 +94,8 @@ public class QuestionServiceTest {
         Long id = 1L;
         Question existingQuestion = new Question();
         Question updatedDetails = new Question();
-        updatedDetails.setQuestionText("Updated text");
-        updatedDetails.setAnswer("Updated answer");
+        updatedDetails.setQuestionText("testText");
+        updatedDetails.setAnswer("testAnswer");
 
         when(questionRepository.findById(id)).thenReturn(Optional.of(existingQuestion));
         when(questionRepository.save(existingQuestion)).thenReturn(existingQuestion);
@@ -104,8 +104,8 @@ public class QuestionServiceTest {
         Question result = questionService.updateQuestion(id, updatedDetails);
 
         // Then
-        assertThat(result.getQuestionText()).isEqualTo("Updated text");
-        assertThat(result.getAnswer()).isEqualTo("Updated answer");
+        assertThat(result.getQuestionText()).isEqualTo("testText");
+        assertThat(result.getAnswer()).isEqualTo("testAnswer");
         verify(questionRepository, times(1)).findById(id);
         verify(questionRepository, times(1)).save(existingQuestion);
     }

@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -55,6 +56,104 @@ public class UserServiceTest {
         // Then
         assertThat(result).isEqualTo(users);
         verify(userRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void testGetUserById() {
+        // Given
+        Long id = 1L;
+        User user = new User();
+        when(userRepository.findById(id)).thenReturn(Optional.of(user));
+
+        // When
+        Optional<User> result = userService.getUserById(id);
+
+        // Then
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(user);
+        verify(userRepository, times(1)).findById(id);
+    }
+
+    @Test
+    public void testGetUserById_NotFound() {
+        // Given
+        Long id = 1L;
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        // When
+        Optional<User> result = userService.getUserById(id);
+
+        // Then
+        assertThat(result).isNotPresent();
+        verify(userRepository, times(1)).findById(id);
+    }
+
+    @Test
+    public void testUpdateUser() {
+        // Given
+        Long id = 1L;
+        User existingUser = new User();
+        User updatedDetails = new User();
+        updatedDetails.setUsername("testUsername");
+        updatedDetails.setEmail("email@example.com");
+
+        when(userRepository.findById(id)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(existingUser)).thenReturn(existingUser);
+
+        // When
+        User result = userService.updateUser(id, updatedDetails);
+
+        // Then
+        assertThat(result.getUsername()).isEqualTo("testUsername");
+        assertThat(result.getEmail()).isEqualTo("email@example.com");
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(1)).save(existingUser);
+    }
+
+    @Test
+    public void testUpdateUser_NotFound() {
+        // Given
+        Long id = 1L;
+        User updatedDetails = new User();
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        // When / Then
+        try {
+            userService.updateUser(id, updatedDetails);
+        } catch (RuntimeException e) {
+            assertThat(e.getMessage()).isEqualTo("User not found");
+        }
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(0)).save(any(User.class));
+    }
+
+    @Test
+    public void testDeleteUser() {
+        // Given
+        Long id = 1L;
+        User user = new User();
+        when(userRepository.findById(id)).thenReturn(Optional.of(user));
+
+        // When
+        userService.deleteUser(id);
+
+        // Then
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(1)).delete(user);
+    }
+
+    @Test
+    public void testDeleteUser_NotFound() {
+        // Given
+        Long id = 1L;
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        // When
+        userService.deleteUser(id);
+
+        // Then
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(0)).delete(any(User.class));
     }
 
 

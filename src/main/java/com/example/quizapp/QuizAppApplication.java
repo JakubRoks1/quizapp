@@ -5,9 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 // Dla encji User i Question wystawic CRUD endpointy - create (z body), read (z parametrem id, readAll), update (z body i request parametrem id), delete (z parametrem id) [X]
-// Użyć osobnych klas dla modeli JSON Entity i ApplicationLevel (uzyc Mapstructa)
-// service testy
-// walidacje
+// Użyć osobnych klas dla modeli JSON Entity i ApplicationLevel (uzyc Mapstructa) [X]
+// service testy [X]
 @SpringBootApplication
 public class QuizAppApplication {
 
