@@ -1,6 +1,7 @@
 package com.example.quizapp.controller;
 
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/test")
 public class TestController {
+
+    @Value("${custom.my1}")
+    private String my1;
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.IM_USED)
@@ -19,6 +23,29 @@ public class TestController {
     @ResponseStatus(value = HttpStatus.BAD_GATEWAY)
     public Integer pm2() {
         return 2;
+    }
+
+    @GetMapping(path = "/conf")
+    public String getConf() {
+        /**
+         * PRACA DOMOWA --->
+         * 1) Stwórz jakis obiekt/klase z miejscem dla twoich propertisow
+         * 2) Stwórz propertisy w application.yml - application-prod.yml (różne typy)
+         * 3) zbuduj i zwróc taki obiekt
+         *
+         * custom.my1=Robert Lewandowski
+         * custom.flag=false
+         * custom.number=12
+         *
+         * class Custom {
+         *   private String my1;
+         *   private boolean flag;
+         *   ...
+         * }
+         *
+         */
+
+        return null;
     }
 
     @GetMapping
