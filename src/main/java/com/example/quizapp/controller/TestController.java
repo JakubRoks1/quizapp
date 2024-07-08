@@ -1,6 +1,8 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.model.Custom;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/test")
 public class TestController {
+
+    @Autowired
+    private Custom custom;
 
     @Value("${custom.my1}")
     private String my1;
@@ -26,7 +31,7 @@ public class TestController {
     }
 
     @GetMapping(path = "/conf")
-    public String getConf() {
+    public Custom getConf() {
         /**
          * PRACA DOMOWA --->
          * 1) Stwórz jakis obiekt/klase z miejscem dla twoich propertisow
@@ -45,7 +50,7 @@ public class TestController {
          *
          */
 
-        return null;
+        return custom;
     }
 
     @GetMapping
