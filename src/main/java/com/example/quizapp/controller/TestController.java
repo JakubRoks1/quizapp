@@ -1,6 +1,7 @@
 package com.example.quizapp.controller;
 
 import com.example.quizapp.model.Custom;
+import jakarta.annotation.PostConstruct;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,11 @@ public class TestController {
 
     @Autowired
     private Custom custom;
+
+    @PostConstruct
+    public void pc() {
+        System.out.println(custom);
+    }
 
     @Value("${custom.my1}")
     private String my1;

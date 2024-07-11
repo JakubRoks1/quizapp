@@ -1,4 +1,26 @@
 custom:
   my1: "Lewandowski Robert"
   flag: true
-  number: 24
+  number: "24"
+  is-final: true
+  now: "2024-04-20"
+  duration: 10
+  clz: java.lang.Integer
+  ins:
+    a: 10
+    b: 20
+  out:
+    x: 1
+    y: 2
+  list:
+    - a,b
+    - c
+  list2:
+    - a: 1
+      b: 30
+    - a: 2
+      b: 40
+  map:
+    a: 20
+    b: 30
+    c: 40
