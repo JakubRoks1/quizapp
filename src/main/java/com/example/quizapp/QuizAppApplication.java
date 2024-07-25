@@ -3,10 +3,8 @@ package com.example.quizapp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
-// Dla encji User i Question wystawic CRUD endpointy - create (z body), read (z parametrem id, readAll), update (z body i request parametrem id), delete (z parametrem id) [X]
-// Użyć osobnych klas dla modeli JSON Entity i ApplicationLevel (uzyc Mapstructa) [X]
-// service testy [X]
+// praca domowa wykonac CRUD dla wszysztkich modeli (C-Create, U-Update, D-Delete, R-Read)
+// RestController (orzymuje UserJSON) -> Service (otrzymuje User) -> Repository (otrzymuje UserEntity) -- zapis zap. UserEntity -- > Service (zwaraca User) ---> RestController zwraca JSONa
 @SpringBootApplication
 public class QuizAppApplication {
 

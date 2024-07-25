@@ -1,17 +1,13 @@
 package com.example.quizapp.mappers;
 
-import com.example.quizapp.entity.QuestionEntity;
-import com.example.quizapp.entity.ScoreEntity;
 import com.example.quizapp.json.QuestionJson;
-import com.example.quizapp.json.ScoreJson;
-import com.example.quizapp.model.Question;
-import com.example.quizapp.model.Score;
+import com.example.quizapp.entity.QuestionEntity;
 
 public interface QuestionMapper {
 
-    QuestionEntity mapToQuestionEntity(Question question);
+    com.example.quizapp.entity.QuestionEntity mapToQuestionEntity(QuestionEntity question);
 
-    Question mapToQuestion(QuestionEntity questionEntity);
+    QuestionEntity mapToQuestion(com.example.quizapp.entity.QuestionEntity questionEntity);
 
-    QuestionJson mapToQuestionJson(Question question);
+    QuestionJson mapToQuestionJson(QuestionEntity question);
 }

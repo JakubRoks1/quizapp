@@ -14,11 +14,15 @@ public class QuestionEntity {
     private Long id;
 
     private String questionText;
-    private String answer1;
-    private String answer2;
-    private String answer3;
-    private String answer4;
-    private String correctAnswer;
 
-
+//    @ManyToOne
+//    @JoinColumn(name = "quiz_id")
+//    private QuizEntity quiz;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private UserEntity user;
+//
+//    @OneToMany(mappedBy = "question")
+//    private Set<AnswerEntity> answers;
 }

@@ -1,6 +1,6 @@
 package com.example.quizapp.service;
 
-import com.example.quizapp.model.Question;
+import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.repository.QuestionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,11 +31,11 @@ public class QuestionServiceTest {
     @Test
     public void testAddQuestion() {
         // Given
-        Question question = new Question();
+        QuestionEntity question = new QuestionEntity();
         when(questionRepository.save(question)).thenReturn(question);
 
         // When
-        Question result = questionService.addQuestion(question);
+        QuestionEntity result = questionService.addQuestion(question);
 
         // Then
         assertThat(result).isEqualTo(question);
@@ -45,13 +45,13 @@ public class QuestionServiceTest {
     @Test
     public void testGetAllQuestions() {
         // Given
-        Question question1 = new Question();
-        Question question2 = new Question();
-        List<Question> questions = Arrays.asList(question1, question2);
+        QuestionEntity question1 = new QuestionEntity();
+        QuestionEntity question2 = new QuestionEntity();
+        List<QuestionEntity> questions = Arrays.asList(question1, question2);
         when(questionRepository.findAll()).thenReturn(questions);
 
         // When
-        List<Question> result = questionService.getAllQuestions();
+        List<QuestionEntity> result = questionService.getAllQuestions();
 
         // Then
         assertThat(result).isEqualTo(questions);
@@ -62,11 +62,11 @@ public class QuestionServiceTest {
     public void testGetQuestionById() {
         // Given
         Long id = 1L;
-        Question question = new Question();
+        QuestionEntity question = new QuestionEntity();
         when(questionRepository.findById(id)).thenReturn(Optional.of(question));
 
         // When
-        Optional<Question> result = questionService.getQuestionById(id);
+        Optional<QuestionEntity> result = questionService.getQuestionById(id);
 
         // Then
         assertThat(result).isPresent();
@@ -81,7 +81,7 @@ public class QuestionServiceTest {
         when(questionRepository.findById(id)).thenReturn(Optional.empty());
 
         // When
-        Optional<Question> result = questionService.getQuestionById(id);
+        Optional<QuestionEntity> result = questionService.getQuestionById(id);
 
         // Then
         assertThat(result).isNotPresent();
@@ -92,8 +92,8 @@ public class QuestionServiceTest {
     public void testUpdateQuestion() {
         // Given
         Long id = 1L;
-        Question existingQuestion = new Question();
-        Question updatedDetails = new Question();
+        QuestionEntity existingQuestion = new QuestionEntity();
+        QuestionEntity updatedDetails = new QuestionEntity();
         updatedDetails.setQuestionText("testText");
         updatedDetails.setAnswer("testAnswer");
 
@@ -101,7 +101,7 @@ public class QuestionServiceTest {
         when(questionRepository.save(existingQuestion)).thenReturn(existingQuestion);
 
         // When
-        Question result = questionService.updateQuestion(id, updatedDetails);
+        QuestionEntity result = questionService.updateQuestion(id, updatedDetails);
 
         // Then
         assertThat(result.getQuestionText()).isEqualTo("testText");
@@ -114,7 +114,7 @@ public class QuestionServiceTest {
     public void testUpdateQuestion_NotFound() {
         // Given
         Long id = 1L;
-        Question updatedDetails = new Question();
+        QuestionEntity updatedDetails = new QuestionEntity();
         when(questionRepository.findById(id)).thenReturn(Optional.empty());
 
         // When / Then
@@ -124,14 +124,14 @@ public class QuestionServiceTest {
             assertThat(e.getMessage()).isEqualTo("Question not found");
         }
         verify(questionRepository, times(1)).findById(id);
-        verify(questionRepository, times(0)).save(any(Question.class));
+        verify(questionRepository, times(0)).save(any(QuestionEntity.class));
     }
 
     @Test
     public void testDeleteQuestion() {
         // Given
         Long id = 1L;
-        Question question = new Question();
+        QuestionEntity question = new QuestionEntity();
         when(questionRepository.findById(id)).thenReturn(Optional.of(question));
 
         // When
@@ -153,6 +153,6 @@ public class QuestionServiceTest {
 
         // Then
         verify(questionRepository, times(1)).findById(id);
-        verify(questionRepository, times(0)).delete(any(Question.class));
+        verify(questionRepository, times(0)).delete(any(QuestionEntity.class));
     }
 }
