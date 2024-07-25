@@ -1,7 +1,7 @@
 package com.example.quizapp.repository;
 
-import com.example.quizapp.model.User;
+import com.example.quizapp.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 }

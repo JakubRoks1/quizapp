@@ -3,7 +3,6 @@ package com.example.quizapp.service;
 import com.example.quizapp.mappers.ScoreMapper;
 import com.example.quizapp.model.Score;
 import com.example.quizapp.repository.ScoreRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,6 @@ public class ScoreService {
     private final ScoreRepository scoreRepository;
     private final ScoreMapper scoreMapper;
 
-    @PostConstruct
-    void pc() {
-        save(new Score(1L, 20, "Mateusz"));
-        save(new Score(2L, 30, "Adam"));
-    }
 
     public void save(Score score) {
         var scoreEntity = scoreMapper.mapToScoreEntity(score);

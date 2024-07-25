@@ -1,6 +1,6 @@
 package com.example.quizapp.service;
 
-import com.example.quizapp.model.Question;
+import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.repository.QuestionRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,26 +15,26 @@ public class QuestionService {
         this.questionRepository = questionRepository;
     }
 
-    public Question addQuestion(Question question) {
+    public QuestionEntity addQuestion(QuestionEntity question) {
         return questionRepository.save(question);
     }
 
-    public List<Question> getAllQuestions() {
+    public List<QuestionEntity> getAllQuestions() {
         return questionRepository.findAll();
     }
 
-    public Optional<Question> getQuestionById(Long id) {
+    public Optional<QuestionEntity> getQuestionById(Long id) {
         return questionRepository.findById(id);
     }
 
-    public Question updateQuestion(Long id, Question questionDetails) {
-        return questionRepository.findById(id)
-                .map(question -> {
-                    question.setQuestionText(questionDetails.getQuestionText());
-                    question.setAnswer(questionDetails.getAnswer());
-                    return questionRepository.save(question);
-                }).orElseThrow(() -> new RuntimeException("Question not found"));
-    }
+//    public QuestionEntity updateQuestion(Long id, QuestionEntity questionDetails) {
+//        return questionRepository.findById(id)
+//                .map(question -> {
+//                    question.setQuestionText(questionDetails.getQuestionText());
+//                    question.setAnswer(questionDetails.getAnswer());
+//                    return questionRepository.save(question);
+//                }).orElseThrow(() -> new RuntimeException("Question not found"));
+//    }
 
     public void deleteQuestion(Long id) {
         questionRepository.findById(id)
