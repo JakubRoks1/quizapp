@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 // praca domowa wykonac CRUD dla wszysztkich modeli (C-Create, U-Update, D-Delete, R-Read)
 // RestController (orzymuje UserJSON) -> Service (otrzymuje User) -> Repository (otrzymuje UserEntity) -- zapis zap. UserEntity -- > Service (zwaraca User) ---> RestController zwraca JSONa
+// dopisać encje entity,json,mappers,model
+// żeby nie nadpisywało ID
+// bez relacji
 @SpringBootApplication
 public class QuizAppApplication {
 
