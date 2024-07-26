@@ -1,5 +1,6 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.entity.AnswerEntity;
 import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/questions")
@@ -42,16 +44,25 @@ public class QuestionController {
         }
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<QuestionEntity> updateQuestion(@PathVariable Long id, @RequestBody QuestionEntity questionDetails) {
-//        return questionRepository.findById(id)
-//                .map(question -> {
-//                    question.setQuestionText(questionDetails.getQuestionText());
-//                    question.setAnswer(questionDetails.getAnswer());
-//                    QuestionEntity updatedQuestion = questionRepository.save(question);
-//                    return ResponseEntity.ok().body(updatedQuestion);
-//                }).orElse(ResponseEntity.notFound().build());
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<QuestionEntity> updateQuestion(@PathVariable Long id, @RequestBody QuestionEntity questionDetails) {
+        return questionRepository.findById(id)
+                .map(question -> {
+                    question.setQuestionText(questionDetails.getQuestionText());
+
+                    Set<AnswerEntity> answers = questionDetails.getAnswers();
+                    if (answers != null) {
+                        for (AnswerEntity answer : answers) {
+                            answer.setQuestion(question);
+                        }
+                        question.getAnswers().clear();
+                        question.getAnswers().addAll(answers);
+                    }
+
+                    QuestionEntity updatedQuestion = questionRepository.save(question);
+                    return ResponseEntity.ok().body(updatedQuestion);
+                }).orElse(ResponseEntity.notFound().build());
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteQuestion(@PathVariable Long id) {
