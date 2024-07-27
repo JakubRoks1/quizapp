@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // dopisać encje entity,json,mappers,model
 // żeby nie nadpisywało ID
 // bez relacji
+// questionController [x]
 @SpringBootApplication
 public class QuizAppApplication {
 
