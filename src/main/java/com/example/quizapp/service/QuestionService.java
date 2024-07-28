@@ -1,7 +1,10 @@
 package com.example.quizapp.service;
 
 import com.example.quizapp.entity.QuestionEntity;
+import com.example.quizapp.mappers.QuestionMapper;
+import com.example.quizapp.model.Question;
 import com.example.quizapp.repository.QuestionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,34 +13,47 @@ import java.util.Optional;
 @Service
 public class QuestionService {
     private final QuestionRepository questionRepository;
+    private final QuestionMapper questionMapper;
 
-    public QuestionService(QuestionRepository questionRepository) {
+    @Autowired
+    public QuestionService(QuestionRepository questionRepository, QuestionMapper questionMapper) {
         this.questionRepository = questionRepository;
+        this.questionMapper = questionMapper;
     }
 
-    public QuestionEntity addQuestion(QuestionEntity question) {
-        return questionRepository.save(question);
+    public Question addQuestion(Question question) {
+        QuestionEntity questionEntity = questionMapper.mapToQuestionEntity(question);
+        QuestionEntity savedQuestionEntity = questionRepository.save(questionEntity);
+        return questionMapper.mapToQuestion(savedQuestionEntity);
     }
 
-    public List<QuestionEntity> getAllQuestions() {
-        return questionRepository.findAll();
+    public List<Question> getAllQuestions() {
+        List<QuestionEntity> questionEntities = questionRepository.findAll();
+        return questionEntities.stream()
+                .map(questionMapper::mapToQuestion)
+                .toList();
     }
 
-    public Optional<QuestionEntity> getQuestionById(Long id) {
-        return questionRepository.findById(id);
+    public Optional<Question> getQuestion(Long id) {
+        return questionRepository.findById(id)
+                .map(questionMapper::mapToQuestion);
     }
 
-//    public QuestionEntity updateQuestion(Long id, QuestionEntity questionDetails) {
-//        return questionRepository.findById(id)
-//                .map(question -> {
-//                    question.setQuestionText(questionDetails.getQuestionText());
-//                    question.setAnswer(questionDetails.getAnswer());
-//                    return questionRepository.save(question);
-//                }).orElseThrow(() -> new RuntimeException("Question not found"));
-//    }
+    public Question updateQuestion(Long id, Question questionDetails) {
+        return questionRepository.findById(id)
+                .map(existingQuestion -> {
+                    existingQuestion.setQuestionText(questionDetails.getQuestionText());
+                    QuestionEntity updatedQuestionEntity = questionRepository.save(existingQuestion);
+                    return questionMapper.mapToQuestion(updatedQuestionEntity);
+                })
+                .orElseThrow(() -> new RuntimeException("Question not found"));
+    }
 
     public void deleteQuestion(Long id) {
-        questionRepository.findById(id)
-                .ifPresent(questionRepository::delete);
+        if (questionRepository.existsById(id)) {
+            questionRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Question not found");
+        }
     }
 }

@@ -1,75 +1,71 @@
 package com.example.quizapp.controller;
 
-import com.example.quizapp.entity.AnswerEntity;
-import com.example.quizapp.entity.QuestionEntity;
-import com.example.quizapp.repository.QuestionRepository;
+import com.example.quizapp.json.QuestionJson;
+import com.example.quizapp.mappers.QuestionMapper;
+import com.example.quizapp.model.Question;
+import com.example.quizapp.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/questions")
 public class QuestionController {
 
-    private final QuestionRepository questionRepository;
+    private final QuestionService questionService;
+    private final QuestionMapper questionMapper;
 
     @Autowired
-    public QuestionController(QuestionRepository questionRepository) {
-        this.questionRepository = questionRepository;
+    public QuestionController(QuestionService questionService, QuestionMapper questionMapper) {
+        this.questionService = questionService;
+        this.questionMapper = questionMapper;
     }
 
     @PostMapping
-    public QuestionEntity createQuestion(@RequestBody QuestionEntity question) {
-        return questionRepository.save(question);
+    public ResponseEntity<QuestionJson> createQuestion(@RequestBody QuestionJson questionJson) {
+        Question question = questionMapper.mapToQuestion(questionJson);
+        Question savedQuestion = questionService.addQuestion(question);
+        QuestionJson responseJson = questionMapper.mapToQuestionJson(savedQuestion);
+        return ResponseEntity.ok(responseJson);
     }
 
     @GetMapping
-    public List<QuestionEntity> getAllQuestions(@RequestHeader Map<String, String> headerAbc) {
-        System.out.println(headerAbc);
-        return questionRepository.findAll();
+    public List<QuestionJson> getAllQuestions() {
+        List<Question> questions = questionService.getAllQuestions();
+        return questions.stream()
+                .map(questionMapper::mapToQuestionJson)
+                .toList();
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<QuestionEntity> getQuestionById(@PathVariable Long id) {
-        Optional<QuestionEntity> question = questionRepository.findById(id);
-        if (question.isPresent()) {
-            return ResponseEntity.ok(question.get());
-        } else {
+    @GetMapping("/{id}")
+    public ResponseEntity<QuestionJson> getQuestionById(@PathVariable Long id) {
+        return questionService.getQuestion(id)
+                .map(questionMapper::mapToQuestionJson)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<QuestionJson> updateQuestion(@PathVariable Long id, @RequestBody QuestionJson questionJson) {
+        try {
+            Question updatedQuestion = questionMapper.mapToQuestion(questionJson);
+            updatedQuestion.setId(id);
+            Question savedQuestion = questionService.updateQuestion(id, updatedQuestion);
+            return ResponseEntity.ok(questionMapper.mapToQuestionJson(savedQuestion));
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<QuestionEntity> updateQuestion(@PathVariable Long id, @RequestBody QuestionEntity questionDetails) {
-        return questionRepository.findById(id)
-                .map(question -> {
-                    question.setQuestionText(questionDetails.getQuestionText());
-
-                    Set<AnswerEntity> answers = questionDetails.getAnswers();
-                    if (answers != null) {
-                        for (AnswerEntity answer : answers) {
-                            answer.setQuestion(question);
-                        }
-                        question.getAnswers().clear();
-                        question.getAnswers().addAll(answers);
-                    }
-
-                    QuestionEntity updatedQuestion = questionRepository.save(question);
-                    return ResponseEntity.ok().body(updatedQuestion);
-                }).orElse(ResponseEntity.notFound().build());
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteQuestion(@PathVariable Long id) {
-        return questionRepository.findById(id)
+        return questionService.getQuestion(id)
                 .map(question -> {
-                    questionRepository.delete(question);
-                    return ResponseEntity.ok().build();
-                }).orElse(ResponseEntity.notFound().build());
+                    questionService.deleteQuestion(id);
+                    return ResponseEntity.noContent().build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

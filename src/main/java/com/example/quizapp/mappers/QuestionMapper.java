@@ -2,12 +2,17 @@ package com.example.quizapp.mappers;
 
 import com.example.quizapp.json.QuestionJson;
 import com.example.quizapp.entity.QuestionEntity;
+import com.example.quizapp.model.Question;
+import org.mapstruct.Mapper;
 
+@Mapper
 public interface QuestionMapper {
 
-    com.example.quizapp.entity.QuestionEntity mapToQuestionEntity(QuestionEntity question);
+    QuestionEntity mapToQuestionEntity(Question question);
 
-    QuestionEntity mapToQuestion(com.example.quizapp.entity.QuestionEntity questionEntity);
+    Question mapToQuestion(QuestionEntity questionEntity);
 
-    QuestionJson mapToQuestionJson(QuestionEntity question);
+    QuestionJson mapToQuestionJson(Question question);
+
+    Question mapToQuestion(QuestionJson questionJson);
 }
