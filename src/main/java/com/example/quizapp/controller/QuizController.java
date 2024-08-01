@@ -37,15 +37,15 @@ public class QuizController {
     @PostMapping
     public ResponseEntity<QuizJson> createQuiz(@RequestBody QuizJson quizJson) {
         Quiz quiz = quizMapper.mapToQuiz(quizJson);
-        Quiz savedQuiz = quizService.addQuiz(quizService);
+        Quiz savedQuiz = quizService.addQuiz(quiz);
         QuizJson responseJson = quizMapper.mapToQuizJson(savedQuiz);
         return ResponseEntity.ok(responseJson);
     }
 
     @GetMapping
     public List<QuizJson> getAllQuizzes() {
-        List<Quiz> questions = quizService.getAllQuizzes();
-        return questions.stream()
+        List<Quiz> quizzes = quizService.getAllQuizzes();
+        return quizzes.stream()
                 .map(quizMapper::mapToQuizJson)
                 .toList();
     }

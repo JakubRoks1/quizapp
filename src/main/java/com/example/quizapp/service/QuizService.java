@@ -21,7 +21,7 @@ public class QuizService {
         this.quizMapper = quizMapper;
     }
 
-    public Quiz addQuiz(QuizService quiz) {
+    public Quiz addQuiz(Quiz quiz) {
         QuizEntity quizEntity = quizMapper.mapToQuizEntity(quiz);
         QuizEntity savedQuizEntity = quizRepository.save(quizEntity);
         return quizMapper.mapToQuiz(savedQuizEntity);
@@ -47,14 +47,15 @@ public class QuizService {
                     QuizEntity updatedQuizEntity = quizRepository.save(existingQuiz);
                     return quizMapper.mapToQuiz(updatedQuizEntity);
                 })
-                .orElseThrow(() -> new RuntimeException("Question not found"));
+                .orElseThrow(() -> new RuntimeException("Quiz not found"));
     }
 
     public void deleteQuiz(Long id) {
         if (quizRepository.existsById(id)) {
             quizRepository.deleteById(id);
         } else {
-            throw new RuntimeException("Question not found");
+            throw new RuntimeException("Quiz not found");
         }
     }
 }
+

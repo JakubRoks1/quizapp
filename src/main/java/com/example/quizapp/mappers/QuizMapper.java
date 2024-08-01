@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface QuizMapper {
-    QuizEntity mapToQuizEntity(QuizService quiz);
+    QuizEntity mapToQuizEntity(Quiz quiz);
 
     Quiz mapToQuiz(QuizEntity quizEntity);
 
