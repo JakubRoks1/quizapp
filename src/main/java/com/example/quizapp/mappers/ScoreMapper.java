@@ -14,4 +14,6 @@ public interface ScoreMapper {
 
     ScoreJson mapToScoreJson(Score score);
 
+    Score mapToScore(ScoreJson scoreJson);
+
 }
