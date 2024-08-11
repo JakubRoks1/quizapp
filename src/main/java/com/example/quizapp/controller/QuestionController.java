@@ -51,7 +51,6 @@ public class QuestionController {
     public ResponseEntity<QuestionJson> updateQuestion(@PathVariable Long id, @RequestBody QuestionJson questionJson) {
         try {
             Question updatedQuestion = questionMapper.mapToQuestion(questionJson);
-            updatedQuestion.setId(id);
             Question savedQuestion = questionService.updateQuestion(id, updatedQuestion);
             return ResponseEntity.ok(questionMapper.mapToQuestionJson(savedQuestion));
         } catch (RuntimeException e) {
