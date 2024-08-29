@@ -32,4 +32,5 @@ public class QuestionEntity {
 //
 //    @OneToMany(mappedBy = "question")
 //    private Set<AnswerEntity> answers;
+
 }

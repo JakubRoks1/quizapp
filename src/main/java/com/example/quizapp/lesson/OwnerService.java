@@ -37,25 +37,29 @@ public class OwnerService {
 
     void m4() {
         Owner o = new Owner();
-        o.setName("Psiarz-2");
+        o.setName("Psiarz-3");
 
         Dog d1 = new Dog();
-        d1.setType("Jamnik-2");
+        d1.setType("Jamnik-3");
 
         Dog d2 = new Dog();
-        d2.setType("Spaniel-2");
+        d2.setType("Spaniel-3");
 
 //        d1 = dogRepository.save(d1);
 //        d2 = dogRepository.save(d2);
 
-        o.setDogs(List.of(d1,d2));
+        o.setDogs(List.of(d1,d2)); // transient
 
         ownerRepository.save(o);
     }
 
+//    @Transactional
     void m5() {
         var byId = ownerRepository.findById(1L);
-        System.out.println(byId.get());
+//        byId.get().setName("Adam");
+        System.out.println("po query");
+        System.out.println(byId.get().getDogs().get(1).getType());
+        System.out.println("po print");
     }
 
 }
