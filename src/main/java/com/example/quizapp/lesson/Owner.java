@@ -23,4 +23,12 @@ public class Owner {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Dog> dogs;
+
+    @Override
+    public String toString() {
+        return "Owner{" +
+            "id=" + id +
+            ", name='" + name + dogs +
+            '}';
+    }
 }

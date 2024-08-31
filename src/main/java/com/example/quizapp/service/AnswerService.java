@@ -1,11 +1,9 @@
 package com.example.quizapp.service;
 
 import com.example.quizapp.entity.AnswerEntity;
-import com.example.quizapp.json.AnswerJson;
 import com.example.quizapp.mappers.AnswerMapper;
 import com.example.quizapp.model.Answer;
 import com.example.quizapp.repository.AnswerRepository;
-import com.example.quizapp.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

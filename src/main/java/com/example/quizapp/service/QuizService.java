@@ -4,6 +4,7 @@ import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.repository.QuizRepository;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,8 @@ public class QuizService {
     private final QuizMapper quizMapper;
 
     @Autowired
-    public QuizService(QuizRepository quizRepository, QuizMapper quizMapper) {
+    public QuizService(QuizRepository quizRepository, QuizMapper quizMapper,
+                       EntityManager entityManager) {
         this.quizRepository = quizRepository;
         this.quizMapper = quizMapper;
     }
