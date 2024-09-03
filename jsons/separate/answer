@@ -1,0 +1,200 @@
+[
+  {
+    "id": 1,
+    "questionId": 1,
+    "answerText": "Canberra",
+    "isCorrect": true
+  },
+  {
+    "id": 2,
+    "questionId": 1,
+    "answerText": "Sydney",
+    "isCorrect": false
+  },
+  {
+    "id": 3,
+    "questionId": 1,
+    "answerText": "Melbourne",
+    "isCorrect": false
+  },
+  {
+    "id": 4,
+    "questionId": 1,
+    "answerText": "Brisbane",
+    "isCorrect": false
+  },
+  {
+    "id": 5,
+    "questionId": 2,
+    "answerText": "Ottawa",
+    "isCorrect": true
+  },
+  {
+    "id": 6,
+    "questionId": 2,
+    "answerText": "Toronto",
+    "isCorrect": false
+  },
+  {
+    "id": 7,
+    "questionId": 2,
+    "answerText": "Vancouver",
+    "isCorrect": false
+  },
+  {
+    "id": 8,
+    "questionId": 2,
+    "answerText": "Montreal",
+    "isCorrect": false
+  },
+  {
+    "id": 9,
+    "questionId": 3,
+    "answerText": "Tokyo",
+    "isCorrect": true
+  },
+  {
+    "id": 10,
+    "questionId": 3,
+    "answerText": "Osaka",
+    "isCorrect": false
+  },
+  {
+    "id": 11,
+    "questionId": 3,
+    "answerText": "Kyoto",
+    "isCorrect": false
+  },
+  {
+    "id": 12,
+    "questionId": 3,
+    "answerText": "Hiroshima",
+    "isCorrect": false
+  },
+  {
+    "id": 13,
+    "questionId": 4,
+    "answerText": "Brasília",
+    "isCorrect": true
+  },
+  {
+    "id": 14,
+    "questionId": 4,
+    "answerText": "Rio de Janeiro",
+    "isCorrect": false
+  },
+  {
+    "id": 15,
+    "questionId": 4,
+    "answerText": "São Paulo",
+    "isCorrect": false
+  },
+  {
+    "id": 16,
+    "questionId": 4,
+    "answerText": "Salvador",
+    "isCorrect": false
+  },
+  {
+    "id": 17,
+    "questionId": 5,
+    "answerText": "Moscow",
+    "isCorrect": true
+  },
+  {
+    "id": 18,
+    "questionId": 5,
+    "answerText": "Saint Petersburg",
+    "isCorrect": false
+  },
+  {
+    "id": 19,
+    "questionId": 5,
+    "answerText": "Novosibirsk",
+    "isCorrect": false
+  },
+  {
+    "id": 20,
+    "questionId": 5,
+    "answerText": "Yekaterinburg",
+    "isCorrect": false
+  },
+  {
+    "id": 21,
+    "questionId": 6,
+    "answerText": "Pretoria",
+    "isCorrect": true
+  },
+  {
+    "id": 22,
+    "questionId": 6,
+    "answerText": "Cape Town",
+    "isCorrect": false
+  },
+  {
+    "id": 23,
+    "questionId": 6,
+    "answerText": "Johannesburg",
+    "isCorrect": false
+  },
+  {
+    "id": 24,
+    "questionId": 6,
+    "answerText": "Durban",
+    "isCorrect": false
+  },
+  {
+    "id": 25,
+    "questionId": 7,
+    "answerText": "New Delhi",
+    "isCorrect": true
+  },
+  {
+    "id": 26,
+    "questionId": 7,
+    "answerText": "Mumbai",
+    "isCorrect": false
+  },
+  {
+    "id": 27,
+    "questionId": 7,
+    "answerText": "Bangalore",
+    "isCorrect": false
+  },
+  {
+    "id": 28,
+    "questionId": 7,
+    "answerText": "Kolkata",
+    "isCorrect": false
+  },
+  {
+    "id": 29,
+    "questionId": 8,
+    "answerText": "Beijing",
+    "isCorrect": true
+  },
+  {
+    "id": 30,
+    "questionId": 8,
+    "answerText": "Shanghai",
+    "isCorrect": false
+  },
+  {
+    "id": 31,
+    "questionId": 8,
+    "answerText": "Shenzhen",
+    "isCorrect": false
+  },
+  {
+    "id": 32,
+    "questionId": 8,
+    "answerText": "Guangzhou",
+    "isCorrect": false
+  },
+  {
+    "id": 33,
+    "questionId": 9,
+    "answerText": "Berlin",
+    "isCorrect": true
+  },
+

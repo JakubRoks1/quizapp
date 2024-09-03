@@ -1,0 +1,97 @@
+{
+  "quizCategory": "Programming",
+  "description": "Assess your understanding of Java programming.",
+  "questions": [
+    {
+      "questionText": "What is the size of an `int` in Java?",
+      "answers": [
+        {"answerText": "32 bits", "isCorrect": true},
+        {"answerText": "16 bits", "isCorrect": false},
+        {"answerText": "8 bits", "isCorrect": false},
+        {"answerText": "64 bits", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "Which of the following is not a Java feature?",
+      "answers": [
+        {"answerText": "Platform-dependent", "isCorrect": true},
+        {"answerText": "Object-oriented", "isCorrect": false},
+        {"answerText": "Portable", "isCorrect": false},
+        {"answerText": "Secure", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "Which of these keywords is used to define a class in Java?",
+      "answers": [
+        {"answerText": "class", "isCorrect": true},
+        {"answerText": "struct", "isCorrect": false},
+        {"answerText": "object", "isCorrect": false},
+        {"answerText": "define", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "Which of the following is a valid declaration of a Java array?",
+      "answers": [
+        {"answerText": "int[] arr;", "isCorrect": true},
+        {"answerText": "int arr[];", "isCorrect": false},
+        {"answerText": "int arr;", "isCorrect": false},
+        {"answerText": "arr[] int;", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "Which method is used to start a thread in Java?",
+      "answers": [
+        {"answerText": "start()", "isCorrect": true},
+        {"answerText": "run()", "isCorrect": false},
+        {"answerText": "init()", "isCorrect": false},
+        {"answerText": "resume()", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "Which of the following is not a type of loop in Java?",
+      "answers": [
+        {"answerText": "do-while", "isCorrect": false},
+        {"answerText": "for", "isCorrect": false},
+        {"answerText": "while", "isCorrect": false},
+        {"answerText": "repeat-until", "isCorrect": true}
+      ]
+    },
+    {
+      "questionText": "What is the default value of a boolean variable in Java?",
+      "answers": [
+        {"answerText": "false", "isCorrect": true},
+        {"answerText": "true", "isCorrect": false},
+        {"answerText": "0", "isCorrect": false},
+        {"answerText": "1", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "Which operator is used to compare two values in Java?",
+      "answers": [
+        {"answerText": "==", "isCorrect": true},
+        {"answerText": "=", "isCorrect": false},
+        {"answerText": "||", "isCorrect": false},
+        {"answerText": "&&", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "Which of the following is a marker interface?",
+      "answers": [
+        {"answerText": "Serializable", "isCorrect": true},
+        {"answerText": "Cloneable", "isCorrect": true},
+        {"answerText": "Comparable", "isCorrect": false},
+        {"answerText": "Runnable", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "Which package contains the `ArrayList` class in Java?",
+      "answers": [
+        {"answerText": "java.util", "isCorrect": true},
+        {"answerText": "java.io", "isCorrect": false},
+        {"answerText": "java.net", "isCorrect": false},
+        {"answerText": "java.awt", "isCorrect": false}
+      ]
+    }
+  ]
+}
+

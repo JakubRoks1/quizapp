@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "quizCategory": "Geography",
+    "description": "Test your knowledge of world capitals."
+  },
+  {
+    "id": 2,
+    "quizCategory": "Programming",
+    "description": "Assess your understanding of Java programming."
+  }
+]

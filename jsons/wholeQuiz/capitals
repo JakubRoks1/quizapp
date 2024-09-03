@@ -1,0 +1,96 @@
+{
+  "quizCategory": "Geography",
+  "description": "Test your knowledge of world capitals.",
+  "questions": [
+    {
+      "questionText": "What is the capital of Australia?",
+      "answers": [
+        {"answerText": "Canberra", "isCorrect": true},
+        {"answerText": "Sydney", "isCorrect": false},
+        {"answerText": "Melbourne", "isCorrect": false},
+        {"answerText": "Brisbane", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "What is the capital of Canada?",
+      "answers": [
+        {"answerText": "Ottawa", "isCorrect": true},
+        {"answerText": "Toronto", "isCorrect": false},
+        {"answerText": "Vancouver", "isCorrect": false},
+        {"answerText": "Montreal", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "What is the capital of Japan?",
+      "answers": [
+        {"answerText": "Tokyo", "isCorrect": true},
+        {"answerText": "Osaka", "isCorrect": false},
+        {"answerText": "Kyoto", "isCorrect": false},
+        {"answerText": "Hiroshima", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "What is the capital of Brazil?",
+      "answers": [
+        {"answerText": "Brasília", "isCorrect": true},
+        {"answerText": "Rio de Janeiro", "isCorrect": false},
+        {"answerText": "São Paulo", "isCorrect": false},
+        {"answerText": "Salvador", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "What is the capital of Russia?",
+      "answers": [
+        {"answerText": "Moscow", "isCorrect": true},
+        {"answerText": "Saint Petersburg", "isCorrect": false},
+        {"answerText": "Novosibirsk", "isCorrect": false},
+        {"answerText": "Yekaterinburg", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "What is the capital of South Africa?",
+      "answers": [
+        {"answerText": "Pretoria", "isCorrect": true},
+        {"answerText": "Cape Town", "isCorrect": false},
+        {"answerText": "Johannesburg", "isCorrect": false},
+        {"answerText": "Durban", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "What is the capital of India?",
+      "answers": [
+        {"answerText": "New Delhi", "isCorrect": true},
+        {"answerText": "Mumbai", "isCorrect": false},
+        {"answerText": "Bangalore", "isCorrect": false},
+        {"answerText": "Kolkata", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "What is the capital of China?",
+      "answers": [
+        {"answerText": "Beijing", "isCorrect": true},
+        {"answerText": "Shanghai", "isCorrect": false},
+        {"answerText": "Shenzhen", "isCorrect": false},
+        {"answerText": "Guangzhou", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "What is the capital of Germany?",
+      "answers": [
+        {"answerText": "Berlin", "isCorrect": true},
+        {"answerText": "Munich", "isCorrect": false},
+        {"answerText": "Frankfurt", "isCorrect": false},
+        {"answerText": "Hamburg", "isCorrect": false}
+      ]
+    },
+    {
+      "questionText": "What is the capital of Egypt?",
+      "answers": [
+        {"answerText": "Cairo", "isCorrect": true},
+        {"answerText": "Alexandria", "isCorrect": false},
+        {"answerText": "Giza", "isCorrect": false},
+        {"answerText": "Luxor", "isCorrect": false}
+      ]
+    }
+  ]
+}
