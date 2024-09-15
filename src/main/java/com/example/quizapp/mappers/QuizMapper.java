@@ -3,8 +3,8 @@ package com.example.quizapp.mappers;
 import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.json.QuizJson;
 import com.example.quizapp.model.Quiz;
-import com.example.quizapp.service.QuizService;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper
 public interface QuizMapper {
@@ -14,5 +14,6 @@ public interface QuizMapper {
 
     QuizJson mapToQuizJson(Quiz quiz);
 
+    @Mapping(target = "id", ignore = true)
     Quiz mapToQuiz(QuizJson quizJson);
 }
