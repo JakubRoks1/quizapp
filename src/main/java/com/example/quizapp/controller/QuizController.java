@@ -1,9 +1,11 @@
 package com.example.quizapp.controller;
 
 import com.example.quizapp.json.QuizJson;
+import com.example.quizapp.json.QuizJsonViewExample;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.service.QuizService;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.groups.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ public class QuizController {
     }
 
     @PostMapping
+    @JsonView(QuizJson.Views.IdOnly.class)
     public ResponseEntity<QuizJson> createQuiz(@RequestBody @Validated({QuizJson.ValidationGroups.Input.class, Default.class}) QuizJson quizJson) {
         Quiz quiz = quizMapper.mapToQuiz(quizJson);
         Quiz savedQuiz = quizService.addQuiz(quiz);

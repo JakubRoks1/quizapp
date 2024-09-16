@@ -1,5 +1,6 @@
 package com.example.quizapp.json;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Null;
 import lombok.Data;
@@ -8,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
 
 /**
  * Do wszystkich pododawaj Walidacje lub JsonView
- * 1) Tworzenie quizu
+ * 1) Tworzenie quizu [x]
  * 2) Modyfikacja danych quizu - jak nie podam pola to zostaje nieruszone
  * 3) Usuwanie quizu (do sprawdzenia dalsze zależności - w przyszłości usuwamy tylko pusty quiz) +
  * 4) Dodawanie pytania do quizu [!] - same pytania, dodawanie do quizu to podanie nr quizu i numeru istniejeacego pytania (łączymy)
@@ -20,14 +21,23 @@ import org.hibernate.validator.constraints.Length;
 @Data
 public class QuizJson {
 
+    @JsonView(Views.IdOnly.class)
     @Null(groups = ValidationGroups.Input.class)
     private Long id;
 
+    @JsonView(Views.Input.class)
     @NotEmpty
     private String quizCategory;
 
+    @JsonView(Views.Input.class)
     @Length(min = 20, max = 40, groups = ValidationGroups.Output.class)
     private String description;
+
+    public interface Views {
+        interface IdOnly {}
+        interface Input {}
+        interface Output {}
+    }
 
     public record ValidationGroups() {
         public interface Input {};
