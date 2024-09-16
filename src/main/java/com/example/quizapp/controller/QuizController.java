@@ -64,6 +64,31 @@ public class QuizController {
         }
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<QuizJson> patchQuiz(@PathVariable Long id, @RequestBody QuizJson quizJson) {
+        try {
+            Quiz existingQuiz = quizService.getQuizById(id);
+            if (existingQuiz == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            if (quizJson.getQuizCategory() != null) {
+                existingQuiz.setQuizCategory(quizJson.getQuizCategory());
+            }
+
+            if (quizJson.getDescription() != null) {
+                existingQuiz.setDescription(quizJson.getDescription());
+            }
+
+            Quiz savedQuiz = quizService.updateQuiz(id, existingQuiz);
+
+            // 4. Zwróć zaktualizowany quiz jako JSON
+            return ResponseEntity.ok(quizMapper.mapToQuizJson(savedQuiz));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteQuiz(@PathVariable Long id) {
         return quizService.getQuiz(id)

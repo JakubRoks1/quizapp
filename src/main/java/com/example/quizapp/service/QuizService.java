@@ -59,5 +59,12 @@ public class QuizService {
             throw new RuntimeException("Quiz not found");
         }
     }
+
+    public Quiz getQuizById(Long id) {
+        return quizRepository.findById(id)
+                .map(quizMapper::mapToQuiz)
+                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+    }
+
 }
 
