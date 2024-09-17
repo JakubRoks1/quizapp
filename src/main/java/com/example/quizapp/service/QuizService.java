@@ -1,10 +1,14 @@
 package com.example.quizapp.service;
 
+import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
+import com.example.quizapp.repository.QuestionRepository;
 import com.example.quizapp.repository.QuizRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +20,28 @@ public class QuizService {
     private final QuizRepository quizRepository;
     private final QuizMapper quizMapper;
 
+    private final QuestionRepository questionRepository;
+
     @Autowired
-    public QuizService(QuizRepository quizRepository, QuizMapper quizMapper,
+    public QuizService(QuizRepository quizRepository, QuizMapper quizMapper, QuestionRepository questionRepository,
                        EntityManager entityManager) {
         this.quizRepository = quizRepository;
         this.quizMapper = quizMapper;
+        this.questionRepository = questionRepository;
+    }
+
+    @Transactional
+    public void addQuestionToQuiz(Long quizId, Long questionId) {
+        QuizEntity quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+
+        Hibernate.initialize(quiz.getQuestions());
+
+        QuestionEntity question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new RuntimeException("Question not found"));
+
+        quiz.getQuestions().add(question);
+        quizRepository.save(quiz);
     }
 
     public Quiz addQuiz(Quiz quiz) {

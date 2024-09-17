@@ -1,5 +1,7 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.entity.QuestionEntity;
+import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.json.QuizJson;
 import com.example.quizapp.json.QuizJsonViewExample;
 import com.example.quizapp.mappers.QuizMapper;
@@ -8,11 +10,13 @@ import com.example.quizapp.service.QuizService;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.groups.Default;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/quizzes")
@@ -34,6 +38,19 @@ public class QuizController {
         Quiz savedQuiz = quizService.addQuiz(quiz);
         QuizJson responseJson = quizMapper.mapToQuizJson(savedQuiz);
         return ResponseEntity.ok(responseJson);
+    }
+
+    @PostMapping("/addQuestionToQuiz")
+    public ResponseEntity<String> addQuestionToQuiz(@RequestBody Map<String, Long> request) {
+        Long quizId = request.get("quizId");
+        Long questionId = request.get("questionId");
+
+        try {
+            quizService.addQuestionToQuiz(quizId, questionId);
+            return ResponseEntity.ok("Question added to quiz successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping
@@ -82,7 +99,6 @@ public class QuizController {
 
             Quiz savedQuiz = quizService.updateQuiz(id, existingQuiz);
 
-            // 4. Zwróć zaktualizowany quiz jako JSON
             return ResponseEntity.ok(quizMapper.mapToQuizJson(savedQuiz));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
