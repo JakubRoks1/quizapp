@@ -40,6 +40,28 @@ public class QuizController {
         return ResponseEntity.ok(responseJson);
     }
 
+    @PostMapping("/{quizId}/questions")
+    public ResponseEntity<String> addQuestionToQuizCascade(
+            @PathVariable Long quizId,
+            @RequestBody QuestionEntity question) {
+
+        try {
+            quizService.addQuestionToQuizCascade(quizId, question);
+            return ResponseEntity.ok("Question added to quiz successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/questions")
+    public ResponseEntity<QuizEntity> getQuizWithQuestions(@PathVariable Long id) {
+        QuizEntity quiz = quizService.getQuizWithQuestions(id);
+        if (quiz == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(quiz);
+    }
+
     @PostMapping("/addQuestionToQuiz")
     public ResponseEntity<String> addQuestionToQuiz(@RequestBody Map<String, Long> request) {
         Long quizId = request.get("quizId");

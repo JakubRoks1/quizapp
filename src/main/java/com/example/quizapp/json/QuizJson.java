@@ -8,11 +8,11 @@ import org.hibernate.validator.constraints.Length;
 
 
 /**
- * Do wszystkich pododawaj Walidacje lub JsonView
+ * Do wszystkich pododawaj Walidacje lub JsonView [x]
  * 1) Tworzenie quizu [x]
  * 2) Modyfikacja danych quizu - jak nie podam pola to zostaje nieruszone [x] PATCH
  * 3) Usuwanie quizu (do sprawdzenia dalsze zależności - w przyszłości usuwamy tylko pusty quiz) +
- * 4) Dodawanie pytania do quizu [!] - same pytania, dodawanie do quizu to podanie nr quizu i numeru istniejeacego pytania (łączymy)
+ * 4) Dodawanie pytania do quizu [!] - same pytania, dodawanie do quizu to podanie nr quizu i numeru istniejeacego pytania (łączymy) [?]
  * 5) Dodawanie pytania do quizu (kaskada) - podaję nr quizu, i obiekt pytania
  * 6) Odpięcie pytania od quizu (nie usuwamy pytania)
  *

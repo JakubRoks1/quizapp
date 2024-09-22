@@ -44,6 +44,26 @@ public class QuizService {
         quizRepository.save(quiz);
     }
 
+    @Transactional
+    public QuizEntity getQuizWithQuestions(Long quizId) {
+        return quizRepository.findByIdWithQuestions(quizId);
+    }
+
+    @Transactional
+    public void addQuestionToQuizCascade(Long quizId, QuestionEntity question) {
+        QuizEntity quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+
+        // Assign the quiz to the question
+        question.setQuiz(quiz);
+
+        // Add the question to the quiz's questions set
+        quiz.getQuestions().add(question);
+
+        // Save the quiz (and cascade save the question due to the CascadeType.ALL)
+        quizRepository.save(quiz);
+    }
+
     public Quiz addQuiz(Quiz quiz) {
         QuizEntity quizEntity = quizMapper.mapToQuizEntity(quiz);
         QuizEntity savedQuizEntity = quizRepository.save(quizEntity);
