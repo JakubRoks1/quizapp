@@ -23,12 +23,13 @@ public class QuestionEntity {
 
     private String questionText;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id")
     @JsonBackReference
     private QuizEntity quiz;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+   @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private Set<AnswerEntity> answers;
 
 //    @ManyToOne

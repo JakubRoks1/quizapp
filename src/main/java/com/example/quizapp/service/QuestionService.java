@@ -56,4 +56,10 @@ public class QuestionService {
             throw new RuntimeException("Question not found");
         }
     }
+
+    public Question findById(Long id) {
+        return questionRepository.findById(id)
+                .map(questionMapper::mapToQuestion)
+                .orElseThrow(() -> new RuntimeException("Question not found"));
+    }
 }

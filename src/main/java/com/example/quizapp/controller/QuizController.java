@@ -2,12 +2,16 @@ package com.example.quizapp.controller;
 
 import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.entity.QuizEntity;
+import com.example.quizapp.json.QuestionJson;
 import com.example.quizapp.json.QuizJson;
 import com.example.quizapp.json.QuizJsonViewExample;
+import com.example.quizapp.json.QuizQuestionJson;
+import com.example.quizapp.json.QuizWithQuestionsJson;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.service.QuizService;
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.groups.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/quizzes")
@@ -38,41 +43,6 @@ public class QuizController {
         Quiz savedQuiz = quizService.addQuiz(quiz);
         QuizJson responseJson = quizMapper.mapToQuizJson(savedQuiz);
         return ResponseEntity.ok(responseJson);
-    }
-
-    @PostMapping("/{quizId}/questions")
-    public ResponseEntity<String> addQuestionToQuizCascade(
-            @PathVariable Long quizId,
-            @RequestBody QuestionEntity question) {
-
-        try {
-            quizService.addQuestionToQuizCascade(quizId, question);
-            return ResponseEntity.ok("Question added to quiz successfully");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/{id}/questions")
-    public ResponseEntity<QuizEntity> getQuizWithQuestions(@PathVariable Long id) {
-        QuizEntity quiz = quizService.getQuizWithQuestions(id);
-        if (quiz == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(quiz);
-    }
-
-    @PostMapping("/addQuestionToQuiz")
-    public ResponseEntity<String> addQuestionToQuiz(@RequestBody Map<String, Long> request) {
-        Long quizId = request.get("quizId");
-        Long questionId = request.get("questionId");
-
-        try {
-            quizService.addQuestionToQuiz(quizId, questionId);
-            return ResponseEntity.ok("Question added to quiz successfully");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
     }
 
     @GetMapping
@@ -106,7 +76,7 @@ public class QuizController {
     @PatchMapping("/{id}")
     public ResponseEntity<QuizJson> patchQuiz(@PathVariable Long id, @RequestBody QuizJson quizJson) {
         try {
-            Quiz existingQuiz = quizService.getQuizById(id);
+            Quiz existingQuiz = quizService.findById(id);
             if (existingQuiz == null) {
                 return ResponseEntity.notFound().build();
             }

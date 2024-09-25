@@ -16,4 +16,6 @@ public interface QuizMapper {
 
     @Mapping(target = "id", ignore = true)
     Quiz mapToQuiz(QuizJson quizJson);
+
+    QuizJson mapToQuizJson(QuizEntity quizEntity);
 }

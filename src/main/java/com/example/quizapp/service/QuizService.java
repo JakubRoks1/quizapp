@@ -3,6 +3,7 @@ package com.example.quizapp.service;
 import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.mappers.QuizMapper;
+import com.example.quizapp.model.Question;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.repository.QuestionRepository;
 import com.example.quizapp.repository.QuizRepository;
@@ -28,40 +29,6 @@ public class QuizService {
         this.quizRepository = quizRepository;
         this.quizMapper = quizMapper;
         this.questionRepository = questionRepository;
-    }
-
-    @Transactional
-    public void addQuestionToQuiz(Long quizId, Long questionId) {
-        QuizEntity quiz = quizRepository.findById(quizId)
-                .orElseThrow(() -> new RuntimeException("Quiz not found"));
-
-        Hibernate.initialize(quiz.getQuestions());
-
-        QuestionEntity question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new RuntimeException("Question not found"));
-
-        quiz.getQuestions().add(question);
-        quizRepository.save(quiz);
-    }
-
-    @Transactional
-    public QuizEntity getQuizWithQuestions(Long quizId) {
-        return quizRepository.findByIdWithQuestions(quizId);
-    }
-
-    @Transactional
-    public void addQuestionToQuizCascade(Long quizId, QuestionEntity question) {
-        QuizEntity quiz = quizRepository.findById(quizId)
-                .orElseThrow(() -> new RuntimeException("Quiz not found"));
-
-        // Assign the quiz to the question
-        question.setQuiz(quiz);
-
-        // Add the question to the quiz's questions set
-        quiz.getQuestions().add(question);
-
-        // Save the quiz (and cascade save the question due to the CascadeType.ALL)
-        quizRepository.save(quiz);
     }
 
     public Quiz addQuiz(Quiz quiz) {
@@ -101,7 +68,7 @@ public class QuizService {
         }
     }
 
-    public Quiz getQuizById(Long id) {
+    public Quiz findById(Long id) {
         return quizRepository.findById(id)
                 .map(quizMapper::mapToQuiz)
                 .orElseThrow(() -> new RuntimeException("Quiz not found"));
