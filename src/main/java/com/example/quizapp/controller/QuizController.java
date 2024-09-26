@@ -1,17 +1,10 @@
 package com.example.quizapp.controller;
 
-import com.example.quizapp.entity.QuestionEntity;
-import com.example.quizapp.entity.QuizEntity;
-import com.example.quizapp.json.QuestionJson;
 import com.example.quizapp.json.QuizJson;
-import com.example.quizapp.json.QuizJsonViewExample;
-import com.example.quizapp.json.QuizQuestionJson;
-import com.example.quizapp.json.QuizWithQuestionsJson;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.service.QuizService;
 import com.fasterxml.jackson.annotation.JsonView;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.groups.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/quizzes")
@@ -61,49 +52,21 @@ public class QuizController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<QuizJson> updateQuiz(@PathVariable Long id, @RequestBody QuizJson quizJson) {
-        try {
-            Quiz updatedQuiz = quizMapper.mapToQuiz(quizJson);
-            updatedQuiz.setId(id);
-            Quiz savedQuiz = quizService.updateQuiz(id, updatedQuiz);
-            return ResponseEntity.ok(quizMapper.mapToQuizJson(savedQuiz));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<QuizJson> patchQuiz(@PathVariable Long id, @RequestBody QuizJson quizJson) {
+    public ResponseEntity<QuizJson> patchQuiz(@PathVariable Long id, @RequestBody /* walidacja TODO */ QuizJson quizJson) {
         try {
-            Quiz existingQuiz = quizService.findById(id);
-            if (existingQuiz == null) {
+            return ResponseEntity.ok(quizMapper.mapToQuizJson(quizService.updateQuiz(id, quizMapper.mapToQuiz(quizJson))));
+        } catch (RuntimeException e) {
+            if ("nie-ma".equals(e.getMessage())) {
                 return ResponseEntity.notFound().build();
             }
-
-            if (quizJson.getQuizCategory() != null) {
-                existingQuiz.setQuizCategory(quizJson.getQuizCategory());
-            }
-
-            if (quizJson.getDescription() != null) {
-                existingQuiz.setDescription(quizJson.getDescription());
-            }
-
-            Quiz savedQuiz = quizService.updateQuiz(id, existingQuiz);
-
-            return ResponseEntity.ok(quizMapper.mapToQuizJson(savedQuiz));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteQuiz(@PathVariable Long id) {
-        return quizService.getQuiz(id)
-                .map(quiz -> {
-                    quizService.deleteQuiz(id);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.status(quizService.deleteQuiz(id) ? HttpStatus.OK : HttpStatus.NOT_FOUND).build();
     }
 }

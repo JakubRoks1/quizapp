@@ -3,8 +3,7 @@ package com.example.quizapp.mappers;
 import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.json.QuizJson;
 import com.example.quizapp.model.Quiz;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 @Mapper
 public interface QuizMapper {
@@ -18,4 +17,9 @@ public interface QuizMapper {
     Quiz mapToQuiz(QuizJson quizJson);
 
     QuizJson mapToQuizJson(QuizEntity quizEntity);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    void updateQuizFromDto(Quiz source, @MappingTarget QuizEntity target);
+
 }

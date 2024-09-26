@@ -1,15 +1,12 @@
 package com.example.quizapp.service;
 
-import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.mappers.QuizMapper;
-import com.example.quizapp.model.Question;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.repository.QuestionRepository;
 import com.example.quizapp.repository.QuizRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,29 +46,30 @@ public class QuizService {
                 .map(quizMapper::mapToQuiz);
     }
 
-    public Quiz updateQuiz(Long id, Quiz quizDetails) {
-        return quizRepository.findById(id)
-                .map(existingQuiz -> {
-                    existingQuiz.setQuizCategory(quizDetails.getQuizCategory());
-                    existingQuiz.setDescription(quizDetails.getDescription());
-                    QuizEntity updatedQuizEntity = quizRepository.save(existingQuiz);
-                    return quizMapper.mapToQuiz(updatedQuizEntity);
-                })
-                .orElseThrow(() -> new RuntimeException("Quiz not found"));
-    }
-
-    public void deleteQuiz(Long id) {
-        if (quizRepository.existsById(id)) {
-            quizRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Quiz not found");
+    public Quiz updateQuiz(Long id, Quiz quizOverrideFields) {
+        var byId = quizRepository.findById(id);
+        if (byId.isEmpty()) {
+            throw new RuntimeException("nie-ma");
         }
+
+        var existing = byId.get();
+
+        quizMapper.updateQuizFromDto(quizOverrideFields, existing);
+
+        var saved = quizRepository.save(existing);
+        return quizMapper.mapToQuiz(saved);
     }
 
-    public Quiz findById(Long id) {
-        return quizRepository.findById(id)
-                .map(quizMapper::mapToQuiz)
-                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+    @Transactional
+    public boolean deleteQuiz(Long id) {
+        var byId = quizRepository.findById(id);
+
+        if (byId.isPresent()) {
+            quizRepository.delete(byId.get());
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

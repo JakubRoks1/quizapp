@@ -13,6 +13,10 @@ import org.hibernate.validator.constraints.Length;
  * 2) Modyfikacja danych quizu - jak nie podam pola to zostaje nieruszone [x] PATCH
  * 3) Usuwanie quizu (do sprawdzenia dalsze zależności - w przyszłości usuwamy tylko pusty quiz) +
  * 4) Dodawanie pytania do quizu [!] - same pytania, dodawanie do quizu to podanie nr quizu i numeru istniejeacego pytania (łączymy) [?]
+ * nowa praca -> get na quizie zwraca obiekt quizu ze wszystkimi pytaniami (jak nie ma pytan, to nie pojawia sie pole questions) - Jackson Annotations
+* przeanalizowane zajęć
+ * do poprawienia znowu jsony
+
  * 5) Dodawanie pytania do quizu (kaskada) - podaję nr quizu, i obiekt pytania
  * 6) Odpięcie pytania od quizu (nie usuwamy pytania)
  *
