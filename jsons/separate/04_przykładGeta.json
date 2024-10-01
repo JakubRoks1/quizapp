@@ -1,0 +1,19 @@
+// get Question id:1
+
+{
+  "id": 1,
+  "quizCategory": "Geography",
+  "description": "Test your knowledge of world capitals.",
+  "questions": [
+    {
+      "id": 1,
+      "questionText": "What is the capital of Canada?",
+      "answer": "Ottawa"
+    },
+    {
+      "id": 32,
+      "questionText": "What is the capital of Poland?",
+      "answer": "Warsaw"
+    }
+  ]
+}

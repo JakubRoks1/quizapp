@@ -2,7 +2,6 @@ package com.example.quizapp.service;
 
 import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.entity.QuizEntity;
-import com.example.quizapp.entity.QuizQuestionEntity;
 import com.example.quizapp.repository.QuestionRepository;
 import com.example.quizapp.repository.QuizQuestionRepository;
 import com.example.quizapp.repository.QuizRepository;
@@ -32,11 +31,13 @@ public class QuizQuestionService {
         QuestionEntity question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new RuntimeException("Question not found"));
 
-        QuizQuestionEntity quizQuestion = new QuizQuestionEntity();
-        quizQuestion.setQuiz(quiz);
-        quizQuestion.setQuestion(question);
+//        var questions = quiz.getQuestions();
+//        questions.add(question);
 
-        quizQuestionRepository.save(quizQuestion);
+        question.setQuiz(quiz);
+
+//        quizRepository.save(quiz);
+        questionRepository.save(question);
     }
 }
 
