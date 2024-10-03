@@ -1,0 +1,83 @@
+[
+  {
+    "questionText": "What is the capital of Australia?",
+    "answer": "Canberra"
+  },
+  {
+    "questionText": "What is the capital of Canada?",
+    "answer": "Ottawa"
+  },
+  {
+    "questionText": "What is the capital of Japan?",
+    "answer": "Tokyo"
+  },
+  {
+    "questionText": "What is the capital of Brazil?",
+    "answer": "Brasília"
+  },
+  {
+    "questionText": "What is the capital of Russia?",
+    "answer": "Moscow"
+  },
+  {
+    "questionText": "What is the capital of South Africa?",
+    "answer": "Pretoria"
+  },
+  {
+    "questionText": "What is the capital of India?",
+    "answer": "New Delhi"
+  },
+  {
+    "questionText": "What is the capital of China?",
+    "answer": "Beijing"
+  },
+  {
+    "questionText": "What is the capital of Germany?",
+    "answer": "Berlin"
+  },
+  {
+    "questionText": "What is the capital of Egypt?",
+    "answer": "Cairo"
+  },
+  {
+    "questionText": "What is the size of an `int` in Java?",
+    "answer": "4 bytes"
+  },
+  {
+    "questionText": "Which of the following is not a Java feature?",
+    "answer": "Pointer"
+  },
+  {
+    "questionText": "Which of these keywords is used to define a class in Java?",
+    "answer": "class"
+  },
+  {
+    "questionText": "Which of the following is a valid declaration of a Java array?",
+    "answer": "int[] arr;"
+  },
+  {
+    "questionText": "Which method is used to start a thread in Java?",
+    "answer": "start()"
+  },
+  {
+    "questionText": "Which of the following is not a type of loop in Java?",
+    "answer": "do-for loop"
+  },
+  {
+    "questionText": "What is the default value of a boolean variable in Java?",
+    "answer": "false"
+  },
+  {
+    "questionText": "Which operator is used to compare two values in Java?",
+    "answer": "=="
+  },
+  {
+    "questionText": "Which of the following is a marker interface?",
+    "answer": "Serializable"
+  },
+  {
+    "questionText": "Which package contains the `ArrayList` class in Java?",
+    "answer": "java.util"
+  }
+]
+
