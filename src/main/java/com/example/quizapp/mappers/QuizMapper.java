@@ -5,7 +5,7 @@ import com.example.quizapp.json.QuizJson;
 import com.example.quizapp.model.Quiz;
 import org.mapstruct.*;
 
-@Mapper
+@Mapper(uses = AnswerMapper.class, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface QuizMapper {
     QuizEntity mapToQuizEntity(Quiz quiz);
 

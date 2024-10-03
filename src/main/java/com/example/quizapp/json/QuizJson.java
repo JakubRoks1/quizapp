@@ -1,11 +1,14 @@
 package com.example.quizapp.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Null;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+
+import java.util.List;
 
 
 /**
@@ -28,6 +31,7 @@ import org.hibernate.validator.constraints.Length;
 public class QuizJson {
 
     @JsonView(Views.IdOnly.class)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Null(groups = ValidationGroups.Input.class)
     private Long id;
 
@@ -38,6 +42,9 @@ public class QuizJson {
     @JsonView(Views.Input.class)
     @Length(min = 20, max = 40, groups = ValidationGroups.Output.class)
     private String description;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<QuestionJson> questions;
 
     public interface Views {
         interface IdOnly {}
