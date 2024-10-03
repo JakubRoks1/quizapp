@@ -1,5 +1,6 @@
 package com.example.quizapp.json;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Null;
@@ -23,6 +24,7 @@ import org.hibernate.validator.constraints.Length;
  * pliki json ponumerowane, 01.., 02..., 03..., 04.., 05..., 06... [x]
  */
 @Data
+@JsonIgnoreProperties(value = { "questions" }, allowGetters = true)
 public class QuizJson {
 
     @JsonView(Views.IdOnly.class)
