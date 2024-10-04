@@ -1,5 +1,6 @@
 package com.example.quizapp.service;
 
+import com.example.quizapp.config.TestConfig;
 import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
@@ -42,8 +43,10 @@ public class QuizService {
     }
 
     public Optional<Quiz> getQuiz(Long id) {
-        return quizRepository.findById(id)
-                .map(quizMapper::mapToQuiz);
+        return Optional.ofNullable(quizMapper.mapToQuiz(TestConfig.testowaEncja()));
+
+//        return quizRepository.findById(id)
+//                .map(quizMapper::mapToQuiz);
     }
 
     public Quiz updateQuiz(Long id, Quiz quizOverrideFields) {
