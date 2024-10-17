@@ -3,7 +3,7 @@ package com.example.quizapp.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -17,6 +17,8 @@ public class QuizEntity {
     private String quizCategory;
     private String description;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<QuestionEntity> questions = new HashSet<>();
+    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "quiz_entity_id")
+    private Set<QuestionEntity> questions = new LinkedHashSet<>();
+
 }

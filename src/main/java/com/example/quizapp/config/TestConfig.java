@@ -8,8 +8,6 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 @Component
 public class TestConfig {
 
@@ -28,13 +26,14 @@ public class TestConfig {
         var quizEntity = new QuizEntity();
         quizEntity.setDescription("Test your knowledge of world capitals.");
         quizEntity.setQuizCategory("Geography");
+        quizRepository.save(quizEntity);
 
         var questionEntity = new QuestionEntity();
         questionEntity.setQuestionText("What is the capital of Canada?");
+        questionRepository.save(questionEntity);
 
-        quizEntity.setQuestions(Set.of(questionEntity));
+//        quizEntity.setQuestions(Set.of(questionEntity));
 
-        quizRepository.save(quizEntity);
     }
 
     public static QuizEntity testowaEncja() {

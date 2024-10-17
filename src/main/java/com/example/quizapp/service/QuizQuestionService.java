@@ -21,19 +21,15 @@ public class QuizQuestionService {
     }
 
     // Method to create the connection using IDs
+//    @Transactional
     public void addQuizQuestionConnection(Long quizId, Long questionId) {
         QuizEntity quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new RuntimeException("Quiz not found"));
         QuestionEntity question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new RuntimeException("Question not found"));
 
-//        var questions = quiz.getQuestions();
-//        questions.add(question);
-
-        question.setQuiz(quiz);
-
-//        quizRepository.save(quiz);
-        questionRepository.save(question);
+        quiz.getQuestions().add(question);
+        quizRepository.save(quiz);
     }
 }
 
