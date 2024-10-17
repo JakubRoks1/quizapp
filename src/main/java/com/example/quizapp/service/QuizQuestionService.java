@@ -3,7 +3,6 @@ package com.example.quizapp.service;
 import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.repository.QuestionRepository;
-import com.example.quizapp.repository.QuizQuestionRepository;
 import com.example.quizapp.repository.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,15 +10,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuizQuestionService {
 
-    private final QuizQuestionRepository quizQuestionRepository;
     private final QuizRepository quizRepository;
     private final QuestionRepository questionRepository;
 
     @Autowired
-    public QuizQuestionService(QuizQuestionRepository quizQuestionRepository,
-                               QuizRepository quizRepository,
+    public QuizQuestionService(QuizRepository quizRepository,
                                QuestionRepository questionRepository) {
-        this.quizQuestionRepository = quizQuestionRepository;
         this.quizRepository = quizRepository;
         this.questionRepository = questionRepository;
     }

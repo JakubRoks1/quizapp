@@ -8,6 +8,7 @@ import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "quizzes")
 public class QuizEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,22 +19,4 @@ public class QuizEntity {
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<QuestionEntity> questions = new HashSet<>();
-
-    public void addQuestion(QuestionEntity question) {
-        questions.add(question);
-        question.setQuiz(this);
-    }
-
-    public void removeQuestion(QuestionEntity question) {
-        questions.remove(question);
-        question.setQuiz(null);
-    }
-
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private UserEntity user;
-//
-//    @OneToMany(mappedBy = "quiz")
-//    private Set<QuestionEntity> questions;
-
 }
