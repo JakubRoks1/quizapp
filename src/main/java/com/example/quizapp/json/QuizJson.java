@@ -10,46 +10,32 @@ import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
-
-/**
- * Do wszystkich pododawaj Walidacje lub JsonView [x]
- * 1) Tworzenie quizu [x]
- * 2) Modyfikacja danych quizu - jak nie podam pola to zostaje nieruszone [x] PATCH
- * 3) Usuwanie quizu (do sprawdzenia dalsze zależności - w przyszłości usuwamy tylko pusty quiz) +
- * 4) Dodawanie pytania do quizu [!] - same pytania, dodawanie do quizu to podanie nr quizu i numeru istniejeacego pytania (łączymy) [?]
- * nowa praca -> get na quizie zwraca obiekt quizu ze wszystkimi pytaniami (jak nie ma pytan, to nie pojawia sie pole questions) - Jackson Annotations
-* przeanalizowane zajęć
- * do poprawienia znowu jsony
-
- * 5) Dodawanie pytania do quizu (kaskada) - podaję nr quizu, i obiekt pytania
- * 6) Odpięcie pytania od quizu (nie usuwamy pytania)
- *
- * pliki json ponumerowane, 01.., 02..., 03..., 04.., 05..., 06... [x]
- */
 @Data
 @JsonIgnoreProperties(value = { "questions" }, allowGetters = true)
 public class QuizJson {
 
-    @JsonView(Views.IdOnly.class)
+    @JsonView({Views.IdOnly.class, Views.GetFull.class, Views.GetShort.class})
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Null(groups = ValidationGroups.Input.class)
     private Long id;
 
-    @JsonView(Views.Input.class)
+    @JsonView({Views.Input.class, Views.GetFull.class, Views.GetShort.class})
     @NotEmpty
     private String quizCategory;
 
-    @JsonView(Views.Input.class)
+    @JsonView({Views.Input.class, Views.GetFull.class, Views.GetShort.class})
     @Length(min = 20, max = 40, groups = ValidationGroups.Output.class)
     private String description;
 
+    @JsonView(Views.GetFull.class)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<QuestionJson> questions;
 
     public interface Views {
         interface IdOnly {}
         interface Input {}
-        interface Output {}
+        interface GetFull {}
+        interface GetShort {}
     }
 
     public record ValidationGroups() {

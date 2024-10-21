@@ -3,11 +3,12 @@ package com.example.quizapp.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "quizzes")
 public class QuizEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,24 +17,8 @@ public class QuizEntity {
     private String quizCategory;
     private String description;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<QuestionEntity> questions = new HashSet<>();
-
-    public void addQuestion(QuestionEntity question) {
-        questions.add(question);
-        question.setQuiz(this);
-    }
-
-    public void removeQuestion(QuestionEntity question) {
-        questions.remove(question);
-        question.setQuiz(null);
-    }
-
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private UserEntity user;
-//
-//    @OneToMany(mappedBy = "quiz")
-//    private Set<QuestionEntity> questions;
+    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "quiz_entity_id")
+    private Set<QuestionEntity> questions = new LinkedHashSet<>();
 
 }

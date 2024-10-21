@@ -1,12 +1,9 @@
 package com.example.quizapp.service;
 
-import com.example.quizapp.config.TestConfig;
 import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
-import com.example.quizapp.repository.QuestionRepository;
 import com.example.quizapp.repository.QuizRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +16,11 @@ public class QuizService {
     private final QuizRepository quizRepository;
     private final QuizMapper quizMapper;
 
-    private final QuestionRepository questionRepository;
-
     @Autowired
-    public QuizService(QuizRepository quizRepository, QuizMapper quizMapper, QuestionRepository questionRepository,
-                       EntityManager entityManager) {
+    public QuizService(QuizRepository quizRepository,
+                       QuizMapper quizMapper) {
         this.quizRepository = quizRepository;
         this.quizMapper = quizMapper;
-        this.questionRepository = questionRepository;
     }
 
     public Quiz addQuiz(Quiz quiz) {
@@ -43,10 +37,9 @@ public class QuizService {
     }
 
     public Optional<Quiz> getQuiz(Long id) {
-        return Optional.ofNullable(quizMapper.mapToQuiz(TestConfig.testowaEncja()));
-
-//        return quizRepository.findById(id)
-//                .map(quizMapper::mapToQuiz);
+//        return Optional.ofNullable(quizMapper.mapToQuiz(TestConfig.testowaEncja()));
+        return quizRepository.findById(id)
+                .map(quizMapper::mapToQuiz);
     }
 
     public Quiz updateQuiz(Long id, Quiz quizOverrideFields) {
@@ -66,7 +59,6 @@ public class QuizService {
     @Transactional
     public boolean deleteQuiz(Long id) {
         var byId = quizRepository.findById(id);
-
         if (byId.isPresent()) {
             quizRepository.delete(byId.get());
             return true;

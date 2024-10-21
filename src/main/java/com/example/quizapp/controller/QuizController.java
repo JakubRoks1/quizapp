@@ -16,6 +16,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/quizzes")
+/**
+ * 1) Porządek z JSONView dla QuizJson - getAll (wariant z pytaniami, i bez pytań)
+ * 2) Dodatkowy get/getAll (bez widoków), wyświetla tylko pola podane w parametrze.
+ * 3) Rozszerz testConfig - wiecej przykladow - quiz bez pytan, quiz z pytaniem, quiz z pytaniami, kilka pytan niepodpietych
+ */
 public class QuizController {
 
     private final QuizService quizService;
@@ -44,7 +49,8 @@ public class QuizController {
                 .toList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", params = "full")
+    @JsonView(QuizJson.Views.GetFull.class)
     public ResponseEntity<QuizJson> getQuizById(@PathVariable Long id) {
         return quizService.getQuiz(id)
                 .map(quizMapper::mapToQuizJson)
@@ -52,21 +58,23 @@ public class QuizController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<QuizJson> patchQuiz(@PathVariable Long id, @RequestBody /* walidacja TODO */ QuizJson quizJson) {
-        try {
-            return ResponseEntity.ok(quizMapper.mapToQuizJson(quizService.updateQuiz(id, quizMapper.mapToQuiz(quizJson))));
-        } catch (RuntimeException e) {
-            if ("nie-ma".equals(e.getMessage())) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.internalServerError().build();
-        }
+    @GetMapping("/{id}")
+    @JsonView(QuizJson.Views.GetShort.class)
+    public ResponseEntity<QuizJson> getQuizByIdShort(@PathVariable Long id) {
+        return getQuizById(id);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteQuiz(@PathVariable Long id) {
         return ResponseEntity.status(quizService.deleteQuiz(id) ? HttpStatus.OK : HttpStatus.NOT_FOUND).build();
+    }
+
+    // zad.2)
+    @GetMapping("/cos")
+    public ResponseEntity<?> getSpecified(@RequestParam List<String> fields
+        //,id
+    ) {
+        // te pola które podasz, te pola zwracasz = nullujesz pola niewskazane
+        return ResponseEntity.ok(fields);
     }
 }
