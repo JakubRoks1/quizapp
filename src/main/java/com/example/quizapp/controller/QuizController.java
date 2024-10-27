@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 1) Porządek z JSONView dla QuizJson - getAll (wariant z pytaniami, i bez pytań)
  * 2) Dodatkowy get/getAll (bez widoków), wyświetla tylko pola podane w parametrze.
- * 3) Rozszerz testConfig - wiecej przykladow - quiz bez pytan, quiz z pytaniem, quiz z pytaniami, kilka pytan niepodpietych
+ * 3) Rozszerz testConfig - wiecej przykladow - quiz bez pytan, quiz z pytaniem, quiz z pytaniami, kilka pytan niepodpietych [x]
  */
 public class QuizController {
 
