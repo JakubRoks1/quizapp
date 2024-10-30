@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -71,10 +72,33 @@ public class QuizController {
 
     // zad.2)
     @GetMapping("/cos")
-    public ResponseEntity<?> getSpecified(@RequestParam List<String> fields
-        //,id
-    ) {
-        // te pola które podasz, te pola zwracasz = nullujesz pola niewskazane
-        return ResponseEntity.ok(fields);
+    public ResponseEntity<List<QuizJson>> getSpecified(@RequestParam List<String> fields) {
+        List<Quiz> quizzes = quizService.getAllQuizzes();
+        List<QuizJson> quizJsons = quizzes.stream()
+                .map(quizMapper::mapToQuizJson)
+                .toList();
+
+        List<QuizJson> filteredQuizzes = new ArrayList<>();
+        for (QuizJson quizJson : quizJsons) {
+            filteredQuizzes.add(filterFields(quizJson, fields));
+        }
+
+        return ResponseEntity.ok(filteredQuizzes);
+    }
+
+    private QuizJson filterFields(QuizJson quizJson, List<String> fields) {
+        if (!fields.contains("id")) {
+            quizJson.setId(null);
+        }
+        if (!fields.contains("description")) {
+            quizJson.setDescription(null);
+        }
+        if (!fields.contains("quizCategory")) {
+            quizJson.setQuizCategory(null);
+        }
+        if (!fields.contains("questions")) {
+            quizJson.setQuestions(null);
+        }
+        return quizJson;
     }
 }
