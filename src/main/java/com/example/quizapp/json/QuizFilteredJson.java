@@ -10,7 +10,10 @@ import org.hibernate.validator.constraints.Length;
 import java.util.List;
 
 @Data
-public class QuizJson {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+/** Do użycia w metodzie z konkretymi polami */
+/** poczyścić */
+public class QuizFilteredJson {
 
     @JsonView({Views.IdOnly.class, Views.GetFull.class, Views.GetShort.class})
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -32,7 +35,7 @@ public class QuizJson {
     public interface Views {
         interface IdOnly {}
         interface Input {}
-        interface GetFull extends QuestionJson.Views.GetFull {}
+        interface GetFull {}
         interface GetShort {}
     }
 

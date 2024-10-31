@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -42,6 +41,7 @@ public class QuizController {
         return ResponseEntity.ok(responseJson);
     }
 
+    // wszystkie z pytaniami i bez pytań (wariant)
     @GetMapping
     public List<QuizJson> getAllQuizzes() {
         List<Quiz> quizzes = quizService.getAllQuizzes();
@@ -70,35 +70,15 @@ public class QuizController {
         return ResponseEntity.status(quizService.deleteQuiz(id) ? HttpStatus.OK : HttpStatus.NOT_FOUND).build();
     }
 
-    // zad.2)
+    // zad.2) też wybór metody geta w zależności od pola
     @GetMapping("/cos")
     public ResponseEntity<List<QuizJson>> getSpecified(@RequestParam List<String> fields) {
-        List<Quiz> quizzes = quizService.getAllQuizzes();
+        List<Quiz> quizzes = quizService.getAllQuizzesWithFilterOutProperties(fields);
         List<QuizJson> quizJsons = quizzes.stream()
                 .map(quizMapper::mapToQuizJson)
                 .toList();
 
-        List<QuizJson> filteredQuizzes = new ArrayList<>();
-        for (QuizJson quizJson : quizJsons) {
-            filteredQuizzes.add(filterFields(quizJson, fields));
-        }
-
-        return ResponseEntity.ok(filteredQuizzes);
-    }
-
-    private QuizJson filterFields(QuizJson quizJson, List<String> fields) {
-        if (!fields.contains("id")) {
-            quizJson.setId(null);
-        }
-        if (!fields.contains("description")) {
-            quizJson.setDescription(null);
-        }
-        if (!fields.contains("quizCategory")) {
-            quizJson.setQuizCategory(null);
-        }
-        if (!fields.contains("questions")) {
-            quizJson.setQuestions(null);
-        }
-        return quizJson;
+        // do zrobienia podejście z nową dedykowaną klasą w jsonmodelu
+        return ResponseEntity.ok(quizJsons);
     }
 }

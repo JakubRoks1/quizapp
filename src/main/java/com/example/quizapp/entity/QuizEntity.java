@@ -17,7 +17,7 @@ public class QuizEntity {
     private String quizCategory;
     private String description;
 
-    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "quiz_entity_id")
     private Set<QuestionEntity> questions = new LinkedHashSet<>();
 

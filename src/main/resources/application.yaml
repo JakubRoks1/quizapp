@@ -3,7 +3,7 @@
 spring:
   jackson:
     mapper:
-      default-view-inclusion: true
+      default-view-inclusion: false
   datasource:
 #    url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
@@ -16,11 +16,9 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
-  profiles:
-    active: prod
 
 logging:
   level:
-    root: WARN
+    root: INFO
 
 #debug: true

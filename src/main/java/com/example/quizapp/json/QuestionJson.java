@@ -1,5 +1,6 @@
 package com.example.quizapp.json;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Null;
 import lombok.Data;
@@ -9,15 +10,17 @@ import org.hibernate.validator.constraints.Length;
 public class QuestionJson {
 
     @Null(groups = ValidationGroups.Input.class)
+    @JsonView({Views.IdOnly.class, Views.GetFull.class})
     private Long id;
 
     @NotEmpty
     @Length(min = 10, max = 255, groups = ValidationGroups.Input.class)
+    @JsonView(Views.GetFull.class)
     private String questionText;
 
     public interface Views {
         interface IdOnly {}
-        interface Input {}
+        interface GetFull {}
         interface Output {}
     }
 
