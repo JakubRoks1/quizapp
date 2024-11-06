@@ -4,6 +4,7 @@ import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.repository.QuizRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,15 @@ import java.util.Optional;
 public class QuizService {
     private final QuizRepository quizRepository;
     private final QuizMapper quizMapper;
+    private final EntityManager entityManager;
 
     @Autowired
     public QuizService(QuizRepository quizRepository,
-                       QuizMapper quizMapper) {
+                       QuizMapper quizMapper,
+                       EntityManager entityManager) {
         this.quizRepository = quizRepository;
         this.quizMapper = quizMapper;
+        this.entityManager = entityManager;
     }
 
     public Quiz addQuiz(Quiz quiz) {
@@ -36,9 +40,23 @@ public class QuizService {
                 .toList();
     }
 
+
+    public List<Quiz> getAllQuizzesWithFilterOutProperties(List<String> fields) {
+        var allQuizzes = getAllQuizzes();
+        allQuizzes.forEach(quiz -> filterFields(quiz, fields));
+        return allQuizzes;
+    }
+
+//    public Optional<Quiz> getQuiz(Long id, boolean fetchQuestions) {
     public Optional<Quiz> getQuiz(Long id) {
-//        return Optional.ofNullable(quizMapper.mapToQuiz(TestConfig.testowaEncja()));
-        return quizRepository.findById(id)
+//        return (fetchQuestions ? quizRepository.findByIdWithQuestions(id) : quizRepository.findById(id))
+        var byId = quizRepository.findById(id);
+        byId.ifPresent(x -> {
+//            entityManager.detach(x); // odciecie od bazy danych
+            x.setQuestions(null);
+        });
+
+        return byId
                 .map(quizMapper::mapToQuiz);
     }
 
@@ -65,6 +83,22 @@ public class QuizService {
         } else {
             return false;
         }
+    }
+
+    private Quiz filterFields(Quiz quiz, List<String> fields) {
+        if (!fields.contains("id")) {
+            quiz.setId(null);
+        }
+        if (!fields.contains("description")) {
+            quiz.setDescription(null);
+        }
+        if (!fields.contains("quizCategory")) {
+            quiz.setQuizCategory(null);
+        }
+        if (!fields.contains("questions")) {
+            quiz.setQuestions(null);
+        }
+        return quiz;
     }
 
 }
