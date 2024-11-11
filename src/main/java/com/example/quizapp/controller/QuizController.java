@@ -5,6 +5,7 @@ import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.service.QuizService;
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.transaction.Transactional;
 import jakarta.validation.groups.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,12 @@ import java.util.List;
  * 1) Porządek z JSONView dla QuizJson - getAll (wariant z pytaniami, i bez pytań)
  * 2) Dodatkowy get/getAll (bez widoków), wyświetla tylko pola podane w parametrze.
  * 3) Rozszerz testConfig - wiecej przykladow - quiz bez pytan, quiz z pytaniem, quiz z pytaniami, kilka pytan niepodpietych [x]
+ * propeties przenieść do yamla
+ * wszystkie z pytaniami i bez pytań (wariant)
+ * też wybór metody geta w zależności od pola (cos)
+ * do zrobienia podejście z nową dedykowaną klasą w jsonmodelu (cos)
+ *
+ * JsonInclude.include.NON_NULL
  */
 public class QuizController {
 
@@ -71,6 +78,7 @@ public class QuizController {
     }
 
     // zad.2) też wybór metody geta w zależności od pola
+    @Transactional
     @GetMapping("/cos")
     public ResponseEntity<List<QuizJson>> getSpecified(@RequestParam List<String> fields) {
         List<Quiz> quizzes = quizService.getAllQuizzesWithFilterOutProperties(fields);
