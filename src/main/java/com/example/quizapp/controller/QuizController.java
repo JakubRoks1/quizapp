@@ -1,9 +1,11 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.json.QuizFilteredJson;
 import com.example.quizapp.json.QuizJson;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.service.QuizService;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.transaction.Transactional;
 import jakarta.validation.groups.Default;
@@ -14,17 +16,20 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @RequestMapping("/quizzes")
 /**
  * 1) Porządek z JSONView dla QuizJson - getAll (wariant z pytaniami, i bez pytań)
  * 2) Dodatkowy get/getAll (bez widoków), wyświetla tylko pola podane w parametrze.
  * 3) Rozszerz testConfig - wiecej przykladow - quiz bez pytan, quiz z pytaniem, quiz z pytaniami, kilka pytan niepodpietych [x]
- * propeties przenieść do yamla
- * wszystkie z pytaniami i bez pytań (wariant)
+ *
+ * propeties przenieść do yamla [x]
+ * wszystkie z pytaniami i bez pytań (wariant) [x]
  * też wybór metody geta w zależności od pola (cos)
- * do zrobienia podejście z nową dedykowaną klasą w jsonmodelu (cos)
+ * do zrobienia podejście z nową dedykowaną klasą w jsonmodelu (cos) [?]
  *
  * JsonInclude.include.NON_NULL
  */
@@ -57,6 +62,30 @@ public class QuizController {
                 .toList();
     }
 
+    @Transactional
+    @GetMapping("/with-questions")
+    public List<QuizJson> getQuizzesWithQuestions() {
+        List<Quiz> quizzesWithQuestions = quizService.getAllQuizzes().stream()
+                .filter(quiz -> quiz.getQuestions() != null && !quiz.getQuestions().isEmpty())
+                .collect(Collectors.toList());
+
+        return quizzesWithQuestions.stream()
+                .map(quizMapper::mapToQuizJson)
+                .toList();
+    }
+
+    @Transactional
+    @GetMapping("/without-questions")
+    public List<QuizJson> getQuizzesWithoutQuestions() {
+        List<Quiz> quizzesWithoutQuestions = quizService.getAllQuizzes().stream()
+                .filter(quiz -> quiz.getQuestions() == null || quiz.getQuestions().isEmpty())
+                .collect(Collectors.toList());
+
+        return quizzesWithoutQuestions.stream()
+                .map(quizMapper::mapToQuizJson)
+                .toList();
+    }
+
     @GetMapping(value = "/{id}", params = "full")
     @JsonView(QuizJson.Views.GetFull.class)
     public ResponseEntity<QuizJson> getQuizById(@PathVariable Long id) {
@@ -79,7 +108,8 @@ public class QuizController {
 
     // zad.2) też wybór metody geta w zależności od pola
     @Transactional
-    @GetMapping("/cos")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @GetMapping("/GetByFields")
     public ResponseEntity<List<QuizJson>> getSpecified(@RequestParam List<String> fields) {
         List<Quiz> quizzes = quizService.getAllQuizzesWithFilterOutProperties(fields);
         List<QuizJson> quizJsons = quizzes.stream()
@@ -88,5 +118,18 @@ public class QuizController {
 
         // do zrobienia podejście z nową dedykowaną klasą w jsonmodelu
         return ResponseEntity.ok(quizJsons);
+    }
+
+    @Transactional
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @GetMapping("/GetByFilteredFields")
+    public ResponseEntity<List<QuizFilteredJson>> getSpecifiedFiltered(@RequestParam List<String> fields) {
+        List<Quiz> quizzes = quizService.getAllQuizzesWithFilterOutProperties(fields);
+
+        List<QuizFilteredJson> quizFilteredJsons = quizzes.stream()
+                .map(quizMapper::mapToQuizFilteredJson)
+                .toList();
+
+        return ResponseEntity.ok(quizFilteredJsons);
     }
 }

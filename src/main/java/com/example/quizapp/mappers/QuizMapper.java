@@ -1,6 +1,7 @@
 package com.example.quizapp.mappers;
 
 import com.example.quizapp.entity.QuizEntity;
+import com.example.quizapp.json.QuizFilteredJson;
 import com.example.quizapp.json.QuizJson;
 import com.example.quizapp.model.Quiz;
 import org.mapstruct.*;
@@ -10,6 +11,8 @@ public interface QuizMapper {
     QuizEntity mapToQuizEntity(Quiz quiz);
 
     Quiz mapToQuiz(QuizEntity quizEntity);
+
+    QuizFilteredJson mapToQuizFilteredJson(Quiz quiz);
 
     QuizJson mapToQuizJson(Quiz quiz);
 

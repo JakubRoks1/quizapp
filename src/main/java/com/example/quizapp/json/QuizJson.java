@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 import java.util.List;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class QuizJson {
 
     @JsonView({Views.IdOnly.class, Views.GetFull.class, Views.GetShort.class})
