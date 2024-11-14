@@ -4,7 +4,6 @@ import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.repository.QuizRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +15,12 @@ import java.util.Optional;
 public class QuizService {
     private final QuizRepository quizRepository;
     private final QuizMapper quizMapper;
-    private final EntityManager entityManager;
 
     @Autowired
     public QuizService(QuizRepository quizRepository,
-                       QuizMapper quizMapper,
-                       EntityManager entityManager) {
+                       QuizMapper quizMapper) {
         this.quizRepository = quizRepository;
         this.quizMapper = quizMapper;
-        this.entityManager = entityManager;
     }
 
     public Quiz addQuiz(Quiz quiz) {
@@ -32,6 +28,12 @@ public class QuizService {
         QuizEntity savedQuizEntity = quizRepository.save(quizEntity);
         return quizMapper.mapToQuiz(savedQuizEntity);
     }
+
+    public Optional<Quiz> getQuiz(Long id, boolean withQuestions) {
+        var byId = withQuestions ? quizRepository.findByIdWithQuestions(id) : quizRepository.findByIdWithoutQuestions(id);
+        return byId.map(quizMapper::mapToQuiz);
+    }
+
 
     public List<Quiz> getAllQuizzes() {
         List<QuizEntity> quizEntities = quizRepository.findAll();
@@ -45,19 +47,6 @@ public class QuizService {
         var allQuizzes = getAllQuizzes();
         allQuizzes.forEach(quiz -> filterFields(quiz, fields));
         return allQuizzes;
-    }
-
-//    public Optional<Quiz> getQuiz(Long id, boolean fetchQuestions) {
-    public Optional<Quiz> getQuiz(Long id) {
-//        return (fetchQuestions ? quizRepository.findByIdWithQuestions(id) : quizRepository.findById(id))
-        var byId = quizRepository.findById(id);
-        byId.ifPresent(x -> {
-//            entityManager.detach(x); // odciecie od bazy danych
-            x.setQuestions(null);
-        });
-
-        return byId
-                .map(quizMapper::mapToQuiz);
     }
 
     public Quiz updateQuiz(Long id, Quiz quizOverrideFields) {

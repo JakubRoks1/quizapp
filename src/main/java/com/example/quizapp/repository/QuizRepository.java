@@ -11,4 +11,17 @@ public interface QuizRepository extends JpaRepository<QuizEntity, Long> {
 
     @Query("SELECT q FROM QuizEntity q LEFT JOIN FETCH q.questions WHERE q.id = :id")
     Optional<QuizEntity> findByIdWithQuestions(@Param("id") Long id);
+
+    default Optional<QuizEntity> findByIdWithoutQuestions(Long id) {
+        var byId = findById(id);
+        byId.ifPresent(entity -> entity.setQuestions(null));
+        return byId;
+    }
+
+//    @Transactional
+//    default Optional<QuizEntity> findByIdWithQuestions(Long id) {
+//        var byId = findById(id);
+//        byId.ifPresent(QuizEntity::getQuestions);
+//        return byId;
+//    }
 }
