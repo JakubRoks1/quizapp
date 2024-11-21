@@ -44,11 +44,13 @@ public class QuizController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<MappingJacksonValue> getQuizById(@PathVariable Long id, @RequestParam(defaultValue = "SHORT") FetchMode mode) {
-        return quizService.getQuiz(id, FetchMode.FULL == mode)
-            .map(quizMapper::mapToQuizJson)
+        var withQuestionsFlag = mode == FetchMode.FULL || mode == FetchMode.COUNT;
+
+        return quizService.getQuiz(id, withQuestionsFlag)
+            .map(quiz -> mode == FetchMode.COUNT ? quizMapper.mapToQuizJsonWithCount(quiz) : quizMapper.mapToQuizJson(quiz))
             .map(quizJson -> {
                 var mjv = new MappingJacksonValue(quizJson);
-                mjv.setSerializationView(mode == FetchMode.FULL ? QuizJson.Views.GetFull.class : QuizJson.Views.GetShort.class);
+                mjv.setSerializationView(FetchMode.getQuizJsonViewBasedOnFetchMode(mode));
                 return mjv;
             })
             .map(ResponseEntity::ok)
@@ -95,4 +97,7 @@ public class QuizController {
 
         return ResponseEntity.ok(quizFilteredJsons);
     }
+
+
+
 }
