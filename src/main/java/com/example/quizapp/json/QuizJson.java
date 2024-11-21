@@ -26,11 +26,15 @@ public class QuizJson {
     @JsonView(Views.GetFull.class)
     private List<QuestionJson> questions;
 
+    @JsonView(Views.GetWithCount.class)
+    private Integer questionsCount;
+
     public interface Views {
         interface IdOnly {}
         interface Input {}
         interface GetFull extends QuestionJson.Views.GetFull {}
         interface GetShort {}
+        interface GetWithCount extends GetShort {};
     }
 
     public record ValidationGroups() {

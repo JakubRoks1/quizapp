@@ -18,6 +18,9 @@ public interface QuizRepository extends JpaRepository<QuizEntity, Long> {
         return byId;
     }
 
+    @Query("SELECT SIZE(q.questions) FROM QuizEntity q WHERE q.id = :id")
+    Integer findQuestionCountById(Long id);
+
 //    @Transactional
 //    default Optional<QuizEntity> findByIdWithQuestions(Long id) {
 //        var byId = findById(id);

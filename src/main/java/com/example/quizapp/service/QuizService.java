@@ -4,7 +4,6 @@ import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.repository.QuizRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,10 +62,13 @@ public class QuizService {
         return quizMapper.mapToQuiz(saved);
     }
 
-    @Transactional
+//    @Transactional
     public boolean deleteQuiz(Long id) {
         var byId = quizRepository.findById(id);
         if (byId.isPresent()) {
+            if (quizRepository.findQuestionCountById(id) > 0) {
+                throw new RuntimeException("niepuste");
+            }
             quizRepository.delete(byId.get());
             return true;
         } else {
