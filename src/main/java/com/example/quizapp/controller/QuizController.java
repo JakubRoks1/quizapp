@@ -18,11 +18,21 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @RequestMapping("/quizzes")
 public class QuizController {
+//    [-] 3) GET ALL na tej samej zasadzie - FULL / SHORT + a potem dodać COUNT [x]
+//    [-] 4) DELETE (by ID) - usunąć można jedynie quiz który nie ma pytań
+//    [-] 5) "Podpinanie pytań" - metody w kotnrolerze w QuizController
+//     /addQuestionToQuiz (id pytania, id quizu)
+//     /removeQuestionFromQuiz (id pytania, id quizu)
+
+//    walidacja czy pytanie istnieje, i czy quiz istnieje, czy pytanie jest już przypięte do quizu
+
+//    6) PATCH quizu (wartości podstawowych)
 
     private final QuizService quizService;
     private final QuizMapper quizMapper;
@@ -59,12 +69,23 @@ public class QuizController {
 
     // Praca domowa
     @GetMapping
-    public List<QuizJson> getAllQuizzes() {
-        List<Quiz> quizzes = quizService.getAllQuizzes();
-        return quizzes.stream()
-                .map(quizMapper::mapToQuizJson)
-                .toList();
+    public List<MappingJacksonValue> getAllQuizzes(@RequestParam(defaultValue = "SHORT") FetchMode mode) {
+        return quizService.getAllQuizzes()
+                .stream()
+                .map(quiz -> {
+                    if (mode == FetchMode.COUNT) {
+                        var quizJsonWithCount = quizMapper.mapToQuizJsonWithCount(quiz);
+                        return new MappingJacksonValue(quizJsonWithCount);
+                    } else {
+                        var quizJson = quizMapper.mapToQuizJson(quiz);
+                        var mjv = new MappingJacksonValue(quizJson);
+                        mjv.setSerializationView(FetchMode.getQuizJsonViewBasedOnFetchMode(mode));
+                        return mjv;
+                    }
+                })
+                .collect(Collectors.toList());
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteQuiz(@PathVariable Long id) {

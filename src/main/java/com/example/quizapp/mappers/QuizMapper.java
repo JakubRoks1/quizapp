@@ -18,7 +18,7 @@ public interface QuizMapper {
     QuizFilteredJson mapToQuizFilteredJson(Quiz quiz);
 
 //    @Mapping(target = "questionsCount", expression = "java(quiz.getQuestions().size())")
-    @Mapping(target = "questionsCount", ignore = true)
+    @Mapping(target = "questionsCount", source = "questions", qualifiedByName = "getQuestionsCount")
     QuizJson mapToQuizJson(Quiz quiz);
 
     @Mapping(target = "questionsCount", source = "questions", qualifiedByName = "getQuestionsCount")
@@ -38,7 +38,7 @@ public interface QuizMapper {
 
     @Named("getQuestionsCount")
     default Integer getQuestionsCount(Set<Question> questions) {
-        return questions == null ? null : questions.size();
+        return questions != null ? questions.size() : 0;
     }
 
 }
