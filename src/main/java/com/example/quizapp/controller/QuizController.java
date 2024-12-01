@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/quizzes")
 public class QuizController {
 //    [-] 3) GET ALL na tej samej zasadzie - FULL / SHORT + a potem dodać COUNT [x]
-//    [-] 4) DELETE (by ID) - usunąć można jedynie quiz który nie ma pytań
+//    [-] 4) DELETE (by ID) - usunąć można jedynie quiz który nie ma pytań [x]
 //    [-] 5) "Podpinanie pytań" - metody w kotnrolerze w QuizController
 //     /addQuestionToQuiz (id pytania, id quizu)
 //     /removeQuestionFromQuiz (id pytania, id quizu)
@@ -88,8 +89,10 @@ public class QuizController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteQuiz(@PathVariable Long id) {
-        return ResponseEntity.status(quizService.deleteQuiz(id) ? HttpStatus.OK : HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<String> deleteQuiz(@PathVariable Long id) {
+        quizService.deleteQuizSafely(id);
+        return ResponseEntity
+                .ok("Quiz successfully deleted");
     }
 
     // zad.2) też wybór metody geta w zależności od pola

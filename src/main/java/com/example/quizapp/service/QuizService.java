@@ -4,6 +4,7 @@ import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.repository.QuizRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,6 +76,17 @@ public class QuizService {
         } else {
             return false;
         }
+    }
+
+    public void deleteQuizSafely(Long id) {
+        QuizEntity quiz = quizRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Quiz not found"));
+
+        if (!quiz.getQuestions().isEmpty()) {
+            throw new IllegalStateException("Cannot delete quiz with questions");
+        }
+
+        quizRepository.delete(quiz);
     }
 
     private Quiz filterFields(Quiz quiz, List<String> fields) {
