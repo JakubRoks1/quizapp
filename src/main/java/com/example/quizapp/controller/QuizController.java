@@ -35,6 +35,8 @@ public class QuizController {
 
 //    6) PATCH quizu (wartości podstawowych)
 
+//    przetestować quizService i Mappery
+
     private final QuizService quizService;
     private final QuizMapper quizMapper;
 
