@@ -20,9 +20,4 @@ public class QuizEntity {
     @OneToMany(fetch = FetchType.EAGER,orphanRemoval = true)
     @JoinColumn(name = "quiz_entity_id")
     private Set<QuestionEntity> questions = new LinkedHashSet<>();
-
-    public Integer getQuestionsCount() {
-        return questions.size();
-    }
-
 }
