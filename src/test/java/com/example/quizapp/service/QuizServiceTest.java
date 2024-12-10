@@ -7,6 +7,7 @@ import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.mappers.QuizMapperImpl;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.repository.QuizRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -529,7 +530,6 @@ void givenQuizEntity_whenGetQuizWithQuestions_thenReturnQuizWithQuestions() {
     @Test
     void givenNonExistingQuiz_whenDeleteQuiz_thenThrowException() {
         Long quizId = 1L;
-
         var mockRepo = Mockito.mock(QuizRepository.class);
         var mockMapper = Mockito.mock(QuizMapper.class);
 
@@ -538,12 +538,11 @@ void givenQuizEntity_whenGetQuizWithQuestions_thenReturnQuizWithQuestions() {
 
         QuizService quizService = new QuizService(mockRepo, mockMapper);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            quizService.deleteQuiz(quizId);
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            quizService.deleteQuizSafely(quizId);
         });
 
-        assertEquals("nie-ma", exception.getMessage());
-
+        assertEquals("Quiz not found", exception.getMessage());
         Mockito.verify(mockRepo).findById(quizId);
         Mockito.verify(mockRepo, Mockito.never()).delete(Mockito.any());
     }
