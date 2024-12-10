@@ -67,14 +67,15 @@ public class QuizService {
     public boolean deleteQuiz(Long id) {
         var byId = quizRepository.findById(id);
         if (byId.isPresent()) {
-            if (quizRepository.findQuestionCountById(id) > 0) {
-                throw new RuntimeException("niepuste");
-            }
-            quizRepository.delete(byId.get());
-            return true;
-        } else {
-            return false;
+        QuizEntity quiz = byId.get();
+            if (!quiz.getQuestions().isEmpty()) {
+                throw new RuntimeException("Cannot delete quiz with questions");
         }
+        quizRepository.delete(quiz);
+        return true;
+    } else {
+        return false;
+    }
     }
 
     public void deleteQuizSafely(Long id) {
@@ -82,7 +83,7 @@ public class QuizService {
                 .orElseThrow(() -> new EntityNotFoundException("Quiz not found"));
 
         if (!quiz.getQuestions().isEmpty()) {
-            throw new IllegalStateException("Cannot delete quiz with questions");
+            throw new RuntimeException("Cannot delete quiz with questions");
         }
 
         quizRepository.delete(quiz);
