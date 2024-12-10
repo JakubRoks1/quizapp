@@ -585,7 +585,7 @@ void givenQuizEntity_whenGetQuizWithQuestions_thenReturnQuizWithQuestions() {
             quizService.deleteQuizSafely(quizId);
         });
 
-        assertEquals("nie-ma", exception.getMessage());
+        assertEquals("Quiz not found", exception.getMessage());
 
         Mockito.verify(mockRepo).findById(quizId);
         Mockito.verify(mockRepo, Mockito.never()).delete(Mockito.any());
