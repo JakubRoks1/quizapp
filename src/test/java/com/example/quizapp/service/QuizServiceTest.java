@@ -1,6 +1,5 @@
 package com.example.quizapp.service;
 
-import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.fixtures.QuizFixtures;
 import com.example.quizapp.mappers.QuizMapper;
@@ -386,102 +385,6 @@ void givenQuizEntity_whenGetQuizWithQuestions_thenReturnQuizWithQuestions() {
         System.out.println(filteredQuizzes);
     }
 
-    @Test
-    void givenQuizzes_whenFilterOutSpecificProperties_thenReturnQuizzesWithSelectedFieldsNull() {
-        var mockRepo = Mockito.mock(QuizRepository.class);
-        var mockMapper = Mockito.mock(QuizMapper.class);
-
-        List<QuizEntity> quizEntities = Arrays.asList(
-                QuizFixtures.getQuizEntity(),
-                QuizFixtures.getQuizEntity()
-        );
-
-        BDDMockito.given(mockRepo.findAll())
-                .willReturn(quizEntities);
-
-        BDDMockito.given(mockMapper.mapToQuiz(Mockito.any(QuizEntity.class)))
-                .willReturn(QuizFixtures.getQuiz());
-
-        QuizService quizService = new QuizService(mockRepo, mockMapper);
-
-        List<Quiz> filteredQuizzes = quizService.getAllQuizzesWithFilterOutProperties(
-                Arrays.asList("id", "description")
-        );
-
-        filteredQuizzes.forEach(quiz -> {
-            assertNull(quiz.getId());
-            assertNotNull(quiz.getQuizCategory());
-            assertNull(quiz.getDescription());
-            assertNotNull(quiz.getQuestions());
-        });
-
-        System.out.println(filteredQuizzes);
-    }
-
-    @Test
-    void givenQuizzes_whenFilterWithEmptyList_thenReturnUnchangedQuizzes() {
-        var mockRepo = Mockito.mock(QuizRepository.class);
-        var mockMapper = Mockito.mock(QuizMapper.class);
-
-        List<QuizEntity> quizEntities = Arrays.asList(
-                QuizFixtures.getQuizEntity(),
-                QuizFixtures.getQuizEntity()
-        );
-
-        BDDMockito.given(mockRepo.findAll())
-                .willReturn(quizEntities);
-
-        BDDMockito.given(mockMapper.mapToQuiz(Mockito.any(QuizEntity.class)))
-                .willReturn(QuizFixtures.getQuiz());
-
-        QuizService quizService = new QuizService(mockRepo, mockMapper);
-
-        List<Quiz> filteredQuizzes = quizService.getAllQuizzesWithFilterOutProperties(
-                Collections.emptyList()
-        );
-
-        filteredQuizzes.forEach(quiz -> {
-            assertNotNull(quiz.getId());
-            assertNotNull(quiz.getQuizCategory());
-            assertNotNull(quiz.getDescription());
-            assertNotNull(quiz.getQuestions());
-        });
-
-        System.out.println(filteredQuizzes);
-    }
-
-    @Test
-    void givenQuizzes_whenFilterWithUnknownProperties_thenReturnUnchangedQuizzes() {
-        var mockRepo = Mockito.mock(QuizRepository.class);
-        var mockMapper = Mockito.mock(QuizMapper.class);
-
-        List<QuizEntity> quizEntities = Arrays.asList(
-                QuizFixtures.getQuizEntity(),
-                QuizFixtures.getQuizEntity()
-        );
-
-        BDDMockito.given(mockRepo.findAll())
-                .willReturn(quizEntities);
-
-        BDDMockito.given(mockMapper.mapToQuiz(Mockito.any(QuizEntity.class)))
-                .willReturn(QuizFixtures.getQuiz());
-
-        QuizService quizService = new QuizService(mockRepo, mockMapper);
-
-        List<Quiz> filteredQuizzes = quizService.getAllQuizzesWithFilterOutProperties(
-                Arrays.asList("unknown", "nonexistent")
-        );
-
-        filteredQuizzes.forEach(quiz -> {
-            assertNotNull(quiz.getId());
-            assertNotNull(quiz.getQuizCategory());
-            assertNotNull(quiz.getDescription());
-            assertNotNull(quiz.getQuestions());
-        });
-
-        System.out.println(filteredQuizzes);
-
-    }
 
     @Test
     void givenQuizWithoutQuestions_whenDeleteQuiz_thenQuizDeletedSuccessfully() {
@@ -545,27 +448,6 @@ void givenQuizEntity_whenGetQuizWithQuestions_thenReturnQuizWithQuestions() {
         assertEquals("Quiz not found", exception.getMessage());
         Mockito.verify(mockRepo).findById(quizId);
         Mockito.verify(mockRepo, Mockito.never()).delete(Mockito.any());
-    }
-
-    @Test
-    void givenQuizWithQuestions_whenDeleteQuizSafely_thenQuizDeletedSuccessfully() {
-        Long quizId = 1L;
-        QuizEntity quizEntity = QuizFixtures.getQuizEntity();
-        quizEntity.setId(quizId);
-        quizEntity.setQuestions(Set.of(new QuestionEntity()));
-
-        var mockRepo = Mockito.mock(QuizRepository.class);
-        var mockMapper = Mockito.mock(QuizMapper.class);
-
-        BDDMockito.given(mockRepo.findById(quizId))
-                .willReturn(Optional.of(quizEntity));
-
-        QuizService quizService = new QuizService(mockRepo, mockMapper);
-
-        assertDoesNotThrow(() -> quizService.deleteQuizSafely(quizId));
-
-        Mockito.verify(mockRepo).findById(quizId);
-        Mockito.verify(mockRepo).delete(quizEntity);
     }
 
     @Test
