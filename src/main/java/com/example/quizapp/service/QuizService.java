@@ -4,7 +4,6 @@ import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.repository.QuizRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +37,8 @@ public class QuizService {
     public List<Quiz> getAllQuizzes() {
         List<QuizEntity> quizEntities = quizRepository.findAll();
         return quizEntities.stream()
-                .map(quizMapper::mapToQuiz)
-                .toList();
+            .map(quizMapper::mapToQuiz)
+            .toList();
     }
 
 
@@ -63,30 +62,18 @@ public class QuizService {
         return quizMapper.mapToQuiz(saved);
     }
 
-//    @Transactional
     public boolean deleteQuiz(Long id) {
-        var byId = quizRepository.findById(id);
+        var byId = quizRepository.findByIdWithQuestions(id);
         if (byId.isPresent()) {
-        QuizEntity quiz = byId.get();
+            QuizEntity quiz = byId.get();
             if (!quiz.getQuestions().isEmpty()) {
                 throw new RuntimeException("Cannot delete quiz with questions");
+            }
+            quizRepository.delete(quiz);
+            return true;
+        } else {
+            return false;
         }
-        quizRepository.delete(quiz);
-        return true;
-    } else {
-        return false;
-    }
-    }
-
-    public void deleteQuizSafely(Long id) {
-        QuizEntity quiz = quizRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Quiz not found"));
-
-        if (!quiz.getQuestions().isEmpty()) {
-            throw new RuntimeException("Cannot delete quiz with questions");
-        }
-
-        quizRepository.delete(quiz);
     }
 
     private Quiz filterFields(Quiz quiz, List<String> fields) {

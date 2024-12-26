@@ -11,12 +11,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.transaction.Transactional;
 import jakarta.validation.groups.Default;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,7 +90,7 @@ public class QuizController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteQuiz(@PathVariable Long id) {
-        quizService.deleteQuizSafely(id);
+        quizService.deleteQuiz(id);
         return ResponseEntity
                 .ok("Quiz successfully deleted");
     }
