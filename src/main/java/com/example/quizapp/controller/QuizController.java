@@ -61,7 +61,7 @@ public class QuizController {
             .map(quiz -> mode == FetchMode.COUNT ? quizMapper.mapToQuizJsonWithCount(quiz) : quizMapper.mapToQuizJson(quiz))
             .map(quizJson -> {
                 var mjv = new MappingJacksonValue(quizJson);
-                mjv.setSerializationView(FetchMode.getQuizJsonViewBasedOnFetchMode(mode));
+                mjv.setSerializationView(FetchMode.getJsonViewBasedOnFetchMode(mode, QuizJson.class));
                 return mjv;
             })
             .map(ResponseEntity::ok)
@@ -80,7 +80,7 @@ public class QuizController {
                     } else {
                         var quizJson = quizMapper.mapToQuizJson(quiz);
                         var mjv = new MappingJacksonValue(quizJson);
-                        mjv.setSerializationView(FetchMode.getQuizJsonViewBasedOnFetchMode(mode));
+                        mjv.setSerializationView(FetchMode.getJsonViewBasedOnFetchMode(mode, QuizJson.class));
                         return mjv;
                     }
                 })

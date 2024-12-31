@@ -18,10 +18,18 @@ public class QuestionJson {
     @JsonView(Views.GetFull.class)
     private String questionText;
 
+    @JsonView(Views.GetWithCount.class)
+    private Integer answerCount; // For COUNT mode
+
+    @JsonView(Views.GetShort.class)
+    private String questionSummary;
+
     public interface Views {
         interface IdOnly {}
         interface GetFull {}
         interface Output {}
+        interface GetShort {}
+        interface GetWithCount {}
     }
 
     public record ValidationGroups() {

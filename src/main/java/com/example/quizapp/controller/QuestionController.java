@@ -1,11 +1,15 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.json.FetchMode;
 import com.example.quizapp.json.QuestionJson;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.service.QuestionService;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,5 +70,29 @@ public class QuestionController {
                     return ResponseEntity.noContent().build();
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/GetByFields")
+    @Transactional
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public ResponseEntity<List<QuestionJson>> getSpecified(@RequestParam List<String> fields) {
+        List<Question> questions = questionService.getAllQuestionsWithFilteredProperties(fields);
+        List<QuestionJson> questionJsons = questions.stream()
+                .map(questionMapper::mapToQuestionJson)
+                .toList();
+        return ResponseEntity.ok(questionJsons);
+    }
+
+    @Transactional
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @GetMapping("/GetByFilteredFields")
+    public ResponseEntity<List<QuestionJson>> getSpecifiedFiltered(@RequestParam List<String> fields) {
+        List<Question> questions = questionService.getAllQuestionsWithFilterOutProperties(fields);
+
+        List<QuestionJson> questionFilteredJsons = questions.stream()
+                .map(questionMapper::mapToQuestionJson)
+                .toList();
+
+        return ResponseEntity.ok(questionFilteredJsons);
     }
 }

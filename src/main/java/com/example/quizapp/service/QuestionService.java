@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class QuestionService {
     private final QuestionRepository questionRepository;
@@ -62,4 +63,30 @@ public class QuestionService {
                 .map(questionMapper::mapToQuestion)
                 .orElseThrow(() -> new RuntimeException("Question not found"));
     }
+
+    public List<Question> getAllQuestionsWithFilteredProperties(List<String> fields) {
+        List<Question> allQuestions = getAllQuestions();
+        allQuestions.forEach(question -> filterFields(question, fields));
+        return allQuestions;
+    }
+
+    private void filterFields(Question question, List<String> fields) {
+        if (fields.contains("questionText")) {
+            question.setQuestionText(null);
+        }
+        if (fields.contains("id")) {
+            question.setId(null);
+        }
+
+    }
+
+    public List<Question> getAllQuestionsWithFilterOutProperties(List<String> fields) {
+        var allQuestions = getAllQuestions();
+        allQuestions.forEach(question -> filterFields(question, fields));
+        return allQuestions;
+    }
+
+
+
+
 }

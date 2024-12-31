@@ -25,20 +25,12 @@ class QuizServiceTest {
 
     @Test
     void givenQuizEntity_whenGetQuizWithQuestions_thenReturnQuizWithQuestions() {
-        ///
         QuizEntity givenEntity = QuizFixtures.getQuizEntity();
 
-//        var quiz1 = new Quiz();
-//        quiz1.setId(300L);
-//        quiz1.setQuizCategory("Kosmos");
 
 
         var mockRepo = Mockito.mock(QuizRepository.class);
         BDDMockito.given(mockRepo.findByIdWithQuestions(1L)).willReturn(Optional.of(givenEntity));
-//        BDDMockito.given(mockRepo.findByIdWithQuestions(2L)).willReturn(Optional.of(givenEntity));
-
-//        var mockMapper = Mockito.mock(QuizMapper.class);
-//        BDDMockito.given(mockMapper.mapToQuiz(givenEntity)).willReturn(quiz1);
 
         var mockMapper = new QuizMapperImpl();
 
@@ -54,21 +46,12 @@ class QuizServiceTest {
 
     @Test
     void givenQuizEntity_whenGetQuizWithoutQuestions_thenReturnQuizWithoutQuestions() {
-        ///
         QuizEntity givenEntity = QuizFixtures.getQuizEntity();
         givenEntity.setQuestions(Set.of());
-
-//        var quiz1 = new Quiz();
-//        quiz1.setId(300L);
-//        quiz1.setQuizCategory("Kosmos");
 
 
         var mockRepo = Mockito.mock(QuizRepository.class);
         BDDMockito.given(mockRepo.findByIdWithoutQuestions(1L)).willReturn(Optional.of(givenEntity));
-//        BDDMockito.given(mockRepo.findByIdWithQuestions(2L)).willReturn(Optional.of(givenEntity));
-
-//        var mockMapper = Mockito.mock(QuizMapper.class);
-//        BDDMockito.given(mockMapper.mapToQuiz(givenEntity)).willReturn(quiz1);
 
         var mockMapper = new QuizMapperImpl();
 
@@ -346,7 +329,6 @@ class QuizServiceTest {
     @Test
     void givenQuizzes_whenFilterOutAllProperties_thenReturnQuizzesWithNullFields() {
         var mockRepo = Mockito.mock(QuizRepository.class);
-//        var mockMapper = Mockito.mock(QuizMapper.class);
         var mockMapper = new QuizMapperImpl();
 
         List<QuizEntity> quizEntities = Arrays.asList(
@@ -356,9 +338,6 @@ class QuizServiceTest {
 
         BDDMockito.given(mockRepo.findAll())
             .willReturn(quizEntities);
-//
-//        BDDMockito.given(mockMapper.mapToQuiz(Mockito.any(QuizEntity.class)))
-//            .willReturn(QuizFixtures.getQuiz());
 
         QuizService quizService = new QuizService(mockRepo, mockMapper);
 
@@ -376,7 +355,6 @@ class QuizServiceTest {
         System.out.println(filteredQuizzes);
     }
 
-    ////////////
 
     @Test
     void givenQuizWithoutQuestions_whenDeleteQuiz_thenQuizDeletedSuccessfully() {

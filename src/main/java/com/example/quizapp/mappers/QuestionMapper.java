@@ -2,8 +2,11 @@ package com.example.quizapp.mappers;
 
 import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.json.QuestionJson;
+import com.example.quizapp.json.QuizJson;
 import com.example.quizapp.model.Question;
+import com.example.quizapp.model.Quiz;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.Set;
 
