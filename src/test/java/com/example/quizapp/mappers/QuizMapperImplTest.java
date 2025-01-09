@@ -3,8 +3,10 @@ package com.example.quizapp.mappers;
 import com.example.quizapp.fixtures.QuizFixtures;
 import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Tag("mapper")
 class QuizMapperImplTest {
 
     @Test
