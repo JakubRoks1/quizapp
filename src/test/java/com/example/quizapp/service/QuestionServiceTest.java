@@ -4,7 +4,9 @@ import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.repository.QuestionRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,6 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@Tag("service")
 class QuestionServiceTest {
 
     @Mock
@@ -43,22 +46,6 @@ class QuestionServiceTest {
         questionEntity = new QuestionEntity();
         questionEntity.setId(1L);
         questionEntity.setQuestionText("Test Question");
-
-        Question question2 = new Question();
-        question2.setId(2L);
-        question2.setQuestionText("Second Test Question");
-
-        Question question3 = new Question();
-        question3.setId(3L);
-        question3.setQuestionText("Third Test Question");
-
-        QuestionEntity questionEntity2 = new QuestionEntity();
-        questionEntity2.setId(2L);
-        questionEntity2.setQuestionText("Second Test Question");
-
-        QuestionEntity questionEntity3 = new QuestionEntity();
-        questionEntity3.setId(3L);
-        questionEntity3.setQuestionText("Third Test Question");
     }
 
     @Test
@@ -189,11 +176,15 @@ class QuestionServiceTest {
 
         List<Question> result = questionService.getAllQuestionsWithFilteredProperties(Arrays.asList("questionText"));
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertNull(result.get(0).getQuestionText());
-        assertNotNull(result.get(0).getId());
+        Assertions.assertThat(result)
+            .isNotNull()
+            .hasSize(1);
 
+        Assertions.assertThat(result.get(0))
+                .satisfies(question1 -> {
+                    Assertions.assertThat(question1.getQuestionText()).isNull();
+                    Assertions.assertThat(question1.getId()).isEqualTo(questionEntity.getId());
+                });
         System.out.println(result);
     }
 
@@ -211,5 +202,9 @@ class QuestionServiceTest {
         assertNotNull(result.get(0).getQuestionText());
 
         System.out.println(result);
+    }
+
+    void givenQuestion() {
+
     }
 }

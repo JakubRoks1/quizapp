@@ -8,6 +8,9 @@ import lombok.val;
 
 import java.util.Set;
 
+// [PRACA DOMOWA z 9/01/2025]
+// przygotować metody wytwórcze (factory methods), które zwracają obiekty do testów, pozamieniać w metodach Quiz i Question
+// używamy AssertJ
 public class QuizFixtures {
 
     public static QuizEntity getQuizEntity() {
@@ -34,5 +37,11 @@ public class QuizFixtures {
         val questionSet = Set.of(givenQuestion);
         givenQuiz.setQuestions(questionSet);
         return givenQuiz;
+    }
+
+    public static Quiz givenQuizWithoutQuestions() {
+        var quiz = getQuiz();
+        quiz.setQuestions(null);
+        return quiz;
     }
 }
