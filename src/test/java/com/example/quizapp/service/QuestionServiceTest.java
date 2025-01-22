@@ -1,6 +1,7 @@
 package com.example.quizapp.service;
 
 import com.example.quizapp.entity.QuestionEntity;
+import com.example.quizapp.fixtures.QuestionFixtures;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.repository.QuestionRepository;
@@ -39,13 +40,8 @@ class QuestionServiceTest {
 
     @BeforeEach
     void setUp() {
-        question = new Question();
-        question.setId(1L);
-        question.setQuestionText("Test Question");
-
-        questionEntity = new QuestionEntity();
-        questionEntity.setId(1L);
-        questionEntity.setQuestionText("Test Question");
+        question = QuestionFixtures.getQuestion();
+        questionEntity = QuestionFixtures.getQuestionEntity();
     }
 
     @Test

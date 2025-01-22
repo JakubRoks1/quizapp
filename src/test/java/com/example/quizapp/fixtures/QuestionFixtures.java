@@ -2,6 +2,7 @@ package com.example.quizapp.fixtures;
 
 import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.model.Question;
+import static org.assertj.core.api.Assertions.*;
 
 public class QuestionFixtures {
     public static QuestionEntity getQuestionEntity() {
@@ -18,27 +19,4 @@ public class QuestionFixtures {
         return question;
     }
 
-    public static QuestionEntity getQuestionEntityWithCustomId(Long id) {
-        QuestionEntity question = getQuestionEntity();
-        question.setId(id);
-        return question;
-    }
-
-    public static Question getQuestionWithCustomId(Long id) {
-        Question question = getQuestion();
-        question.setId(id);
-        return question;
-    }
-
-    public static QuestionEntity getQuestionEntityWithCustomText(String text) {
-        QuestionEntity question = getQuestionEntity();
-        question.setQuestionText(text);
-        return question;
-    }
-
-    public static Question getQuestionWithCustomText(String text) {
-        Question question = getQuestion();
-        question.setQuestionText(text);
-        return question;
-    }
 }

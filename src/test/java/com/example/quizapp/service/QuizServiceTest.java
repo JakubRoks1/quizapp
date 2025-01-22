@@ -2,6 +2,7 @@ package com.example.quizapp.service;
 
 import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.entity.QuizEntity;
+import com.example.quizapp.fixtures.QuizFixtures;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.model.Quiz;
@@ -41,15 +42,9 @@ class QuizServiceTest {
     void setUp() {
         quizMapper = Mappers.getMapper(QuizMapper.class);
         quizService = new QuizService(quizRepository, quizMapper);
-
         quizId = 1L;
 
-        quiz = new Quiz();
-        quiz.setId(quizId);
-        quiz.setQuizCategory("Test Category");
-        quiz.setDescription("Test Description");
-        quiz.setQuestions(new HashSet<>());
-
+        quiz = QuizFixtures.givenQuizWithoutQuestions();
         quizEntity = quizMapper.mapToQuizEntity(quiz);
     }
 
