@@ -26,13 +26,14 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.ClassBasedNavigableIterableAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
  * 1) W przynajmniej jednym teście Json request jest czytany z pliku (ten co wysylasz), i expected json też z pliku - masz dwa pliki, jeden to givenJson drugi expectedJson (x) createQuiz_shouldReturnCreatedQuiz
- * 1*) Zaczytać template Jsona i podmienić wartość (tj. w teście templateTest)
+ * 1*) Zaczytać template Jsona i podmienić wartość (tj. w teście templateTest) x getById()
  * 2) Pozamieniaj testy na użycie JSONów (całość)
  * 3) Testy negatywne - np. dla create gdzie podajesz ID - parametrized test - dynamiczne doklejenie wartości do jsona i sprawdzenie
  * 4) test na getQuiz który ma 2 pytania (FULL) wariant z assercją JsonPath i JSON
@@ -66,22 +67,31 @@ class QuizControllerTest {
 
     @Test
     public void getById() throws Exception {
+        val expectedJsonTemplate = """
+        {
+          "id": ${id},
+          "quizCategory": "${quizCategory}",
+          "description": "${description}"
+        }""";
+
+        val concreteExpectedJson = expectedJsonTemplate
+                .replace("${id}", "1")
+                .replace("${quizCategory}", "Astronomia")
+                .replace("${description}", "Pytania o planetach i księżycach");
+
         when(quizService.getQuiz(eq(1L), any(Boolean.class))).thenReturn(Optional.of(QuizFixtures.getQuiz()));
 
+        MvcResult result = mockMvc
+                .perform(MockMvcRequestBuilders.get("/quizzes/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(concreteExpectedJson))
+                .andReturn();
 
-        var contentAsString = mockMvc
-            .perform(MockMvcRequestBuilders.get("/quizzes/1"))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("1"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.quizCategory").value("Astronomia"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Pytania o planetach i księżycach"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.questions").doesNotExist())
-            .andReturn().getResponse().getContentAsString();
+        String contentAsString = result.getResponse().getContentAsString();
+        System.out.println("Response: " + contentAsString);
 
-        System.out.println(contentAsString);
-
-        var quiz = objectMapper.readValue(contentAsString, Quiz.class);
-        System.out.println(quiz);
+        Quiz quiz = objectMapper.readValue(contentAsString, Quiz.class);
+        System.out.println("Quiz: " + quiz);
 
     }
 
