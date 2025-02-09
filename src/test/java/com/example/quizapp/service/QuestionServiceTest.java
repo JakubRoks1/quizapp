@@ -6,6 +6,8 @@ import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.repository.QuestionRepository;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.AutoCloseableSoftAssertions;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -200,7 +202,26 @@ class QuestionServiceTest {
         System.out.println(result);
     }
 
+    @Test
     void givenQuestion() {
+//        Assertions.assertThat(1)
+//            .isEqualTo(1)
+//            .isLessThan(0)
+//            .isNotNull();
 
+
+
+        try (AutoCloseableSoftAssertions softly = new AutoCloseableSoftAssertions()) {
+            softly.assertThat(1)
+                .isEqualTo(2)
+                .isLessThan(0)
+                .isNotNull();
+        }
+        SoftAssertions soft = new SoftAssertions();
+//        soft.assertThat(1)
+//            .isEqualTo(2)
+//            .isLessThan(0)
+//            .isNotNull();
+//        soft.assertAll();
     }
 }
