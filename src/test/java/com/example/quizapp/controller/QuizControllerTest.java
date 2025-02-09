@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +31,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
- * 1) W przynajmniej jednym teście Json request jest czytany z pliku (ten co wysylasz), i expected json też z pliku - masz dwa pliki, jeden to givenJson drugi expectedJson
+ * 1) W przynajmniej jednym teście Json request jest czytany z pliku (ten co wysylasz), i expected json też z pliku - masz dwa pliki, jeden to givenJson drugi expectedJson (x) createQuiz_shouldReturnCreatedQuiz
  * 1*) Zaczytać template Jsona i podmienić wartość (tj. w teście templateTest)
  * 2) Pozamieniaj testy na użycie JSONów (całość)
  * 3) Testy negatywne - np. dla create gdzie podajesz ID - parametrized test - dynamiczne doklejenie wartości do jsona i sprawdzenie
@@ -117,31 +119,20 @@ class QuizControllerTest {
 
     @Test
     public void createQuiz_shouldReturnCreatedQuiz() throws Exception {
-        val givenJson = """
-            {
-              "quizCategory" : "Astronomia",
-              "description" : "Pytania o planetach i księżycach"
-            }""";
+        String givenJson = new String(Files.readAllBytes(Paths.get("jsons/separate/givenJson.json")));
+        String expectedJson = new String(Files.readAllBytes(Paths.get("jsons/separate/expectedJson.json")));
 
         when(quizService.addQuiz(any(Quiz.class))).thenReturn(QuizFixtures.getQuiz());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/quizzes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(givenJson))
-            .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
-            .andExpectAll(
-                MockMvcResultMatchers.status().isOk(),
-//                MockMvcResultMatchers.status().is(Matchers.anyOf(Matchers.is(200), Matchers.is(201))),
-                MockMvcResultMatchers.jsonPath("$.id").value("1"),
-                MockMvcResultMatchers.content().json("""
-                  {
-                    "id": 1
-                  }""", JsonCompareMode.STRICT)
-            );
-//            )
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.quizCategory").value("Astronomia"))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("2"));
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("$.id").value("1"),
+                        MockMvcResultMatchers.content().json(expectedJson, JsonCompareMode.STRICT)
+                );
     }
 
     @Test
