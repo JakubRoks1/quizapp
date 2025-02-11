@@ -5,11 +5,15 @@ import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.mappers.QuizMapperImpl;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.service.QuizService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.val;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -32,10 +36,10 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
- * 1) W przynajmniej jednym teście Json request jest czytany z pliku (ten co wysylasz), i expected json też z pliku - masz dwa pliki, jeden to givenJson drugi expectedJson (x) createQuiz_shouldReturnCreatedQuiz
- * 1*) Zaczytać template Jsona i podmienić wartość (tj. w teście templateTest) x getById()
- * 2) Pozamieniaj testy na użycie JSONów (całość)
- * 3) Testy negatywne - np. dla create gdzie podajesz ID - parametrized test - dynamiczne doklejenie wartości do jsona i sprawdzenie
+ * x1) W przynajmniej jednym teście Json request jest czytany z pliku (ten co wysylasz), i expected json też z pliku - masz dwa pliki, jeden to givenJson drugi expectedJson (x) createQuiz_shouldReturnCreatedQuiz
+ * x1*) Zaczytać template Jsona i podmienić wartość (tj. w teście templateTest) x getById()
+ * x2) Pozamieniaj testy na użycie JSONów (całość)
+ * x3) Testy negatywne - np. dla create gdzie podajesz ID - parametrized test - dynamiczne doklejenie wartości do jsona i sprawdzenie createQuiz_withProvidedId_shouldReturnBadRequest
  * 4) test na getQuiz który ma 2 pytania (FULL) wariant z assercją JsonPath i JSON
  */
 @WebMvcTest(controllers = QuizController.class)
@@ -150,16 +154,23 @@ class QuizControllerTest {
         List<Quiz> quizzes = List.of(QuizFixtures.getQuiz());
         when(quizService.getAllQuizzes()).thenReturn(quizzes);
 
+        String expectedJson = """
+    [{
+      "value": {
+        "id": 1,
+        "questionsCount": 1,
+        "quizCategory": "Astronomia",
+        "description": "Pytania o planetach i księżycach"
+      }
+    }]
+    """;
+
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/quizzes")
                         .param("mode", "COUNT"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].value.id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].value.questionsCount").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].value.quizCategory").value("Astronomia"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].value.description").value("Pytania o planetach i księżycach"))
                 .andReturn();
 
-        System.out.println(result.getResponse().getContentAsString());
+        JSONAssert.assertEquals(expectedJson, result.getResponse().getContentAsString(), false);
     }
 
     @Test
@@ -186,14 +197,36 @@ class QuizControllerTest {
 
         when(quizService.getAllQuizzesWithFilterOutProperties(fields)).thenReturn(quizzes);
 
+        String expectedJson = """
+    [{
+      "id": 1,
+      "quizCategory": "Astronomia",
+      "description": "Pytania o planetach i księżycach"
+    }]
+    """;
+
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/quizzes/GetByFields")
                         .param("fields", "id", "quizCategory"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].quizCategory").value("Astronomia"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value("Pytania o planetach i księżycach"))
                 .andReturn();
 
-        System.out.println("Response Body: " + result.getResponse().getContentAsString());
+        JSONAssert.assertEquals(expectedJson, result.getResponse().getContentAsString(), false);
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"1", "100", "999"})
+    void createQuiz_withProvidedId_shouldReturnBadRequest(String id) throws Exception {
+        String baseJson = new String(Files.readAllBytes(Paths.get("jsons/separate/givenJson.json")));
+        JSONObject jsonObject = new JSONObject(baseJson);
+        jsonObject.put("id", id);
+        String modifiedJson = jsonObject.toString();
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/quizzes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(modifiedJson))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("ID should not be provided for quiz creation"));
+    }
+
+
 }
