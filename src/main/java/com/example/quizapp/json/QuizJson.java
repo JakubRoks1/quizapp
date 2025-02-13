@@ -1,6 +1,5 @@
 package com.example.quizapp.json;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Null;
@@ -10,7 +9,6 @@ import org.hibernate.validator.constraints.Length;
 import java.util.List;
 
 @Data
-@JsonPropertyOrder({"description", "id", "quizCategory", "questions", "questionsCount"})
 public class QuizJson {
 
     @JsonView({Views.IdOnly.class, Views.GetFull.class, Views.GetShort.class})
