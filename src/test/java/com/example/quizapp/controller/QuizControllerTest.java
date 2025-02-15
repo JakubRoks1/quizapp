@@ -5,9 +5,7 @@ import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.mappers.QuizMapperImpl;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.service.QuizService;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.val;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -30,7 +28,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.ClassBasedNavigableIterableAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;

@@ -21,6 +21,7 @@ server:
     include-binding-errors: always
     include-exception: true
     include-message: always
+    include-stacktrace: always
 
 custom:
   flag: false
