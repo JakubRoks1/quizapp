@@ -1,5 +1,6 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.json.FetchMode;
 import com.example.quizapp.json.QuestionJson;
 import com.example.quizapp.mappers.QuestionMapper;
@@ -57,8 +58,8 @@ public class QuestionController {
             Question updatedQuestion = questionMapper.mapToQuestion(questionJson);
             Question savedQuestion = questionService.updateQuestion(id, updatedQuestion);
             return ResponseEntity.ok(questionMapper.mapToQuestionJson(savedQuestion));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+        } catch (QuizAppException e) {
+            return ResponseEntity.status(e.getCode()).body(null);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.json.QuizQuestionJson;
 import com.example.quizapp.service.QuizQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class QuizQuestionController {
         try {
             quizQuestionService.addQuizQuestionConnection(quizId, questionId);
             return ResponseEntity.ok("Connected Quiz and Question successfully.");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (QuizAppException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
         }
     }
 }

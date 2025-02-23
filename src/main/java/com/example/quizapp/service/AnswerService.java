@@ -1,6 +1,7 @@
 package com.example.quizapp.service;
 
 import com.example.quizapp.entity.AnswerEntity;
+import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.mappers.AnswerMapper;
 import com.example.quizapp.model.Answer;
 import com.example.quizapp.repository.AnswerRepository;
@@ -47,14 +48,14 @@ public class AnswerService {
                     AnswerEntity updatedAnswerEntity = answerRepository.save(existingAnswer);
                     return answerMapper.mapToAnswer(updatedAnswerEntity);
                 })
-                .orElseThrow(() -> new RuntimeException("Answer not found"));
+                .orElseThrow(() -> new QuizAppException(404, "Answer not found"));
     }
 
     public void deleteAnswer(Long id) {
         if (answerRepository.existsById(id)) {
             answerRepository.deleteById(id);
         } else {
-            throw new RuntimeException("Answer not found");
+            throw new QuizAppException(404, "Answer not found");
         }
     }
 }

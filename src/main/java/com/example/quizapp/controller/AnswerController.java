@@ -1,5 +1,6 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.json.AnswerJson;
 import com.example.quizapp.json.QuestionJson;
 import com.example.quizapp.mappers.AnswerMapper;
@@ -65,8 +66,8 @@ public class AnswerController {
             updatedAnswer.setId(id);
             Answer savedAnswer = answerService.updateAnswer(id, updatedAnswer);
             return ResponseEntity.ok(answerMapper.mapToAnswerJson(savedAnswer));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+        } catch (QuizAppException e) {
+            return ResponseEntity.status(e.getCode()).body(null);
         }
     }
 
