@@ -1,6 +1,7 @@
 package com.example.quizapp.service;
 
 import com.example.quizapp.entity.QuestionEntity;
+import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.fixtures.QuestionFixtures;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;
@@ -141,7 +142,9 @@ class QuestionServiceTest {
     void deleteQuestion_WhenDoesNotExist_ShouldThrowException() {
         when(questionRepository.existsById(1L)).thenReturn(false);
 
-        assertThrows(RuntimeException.class, () -> questionService.deleteQuestion(1L));
+        var quizAppException = assertThrows(QuizAppException.class, () -> questionService.deleteQuestion(1L));
+        System.out.println(quizAppException.getExceptionType());
+
         verify(questionRepository, never()).deleteById(any());
     }
 

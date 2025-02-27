@@ -7,8 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ErrorMapper {
-    @Mapping(target = "code", source = "code")
-    @Mapping(target = "message", source = "message")
-    @Mapping(target = "timestamp", source = "timestamp")
+    @Mapping(target = "code", source = "exceptionType.code")
     ErrorJson toError(QuizAppException exception);
 }

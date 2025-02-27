@@ -1,5 +1,6 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.exception.ExceptionType;
 import com.example.quizapp.json.QuizJson;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
@@ -16,14 +17,12 @@ public class ErrorController {
 
     @GetMapping("/1")
     public void a() {
-        other();
-
+        throw ExceptionType.QUESTION_NOT_FOUND.getException();
     }
 
     @GetMapping("/2")
     public void b() {
-        throwEx2();
-
+        throw ExceptionType.VALIDATION_EXCEPTION.getException();
     }
 
     @GetMapping("/3")

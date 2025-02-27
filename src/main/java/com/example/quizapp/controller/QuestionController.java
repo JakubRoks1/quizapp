@@ -1,7 +1,5 @@
 package com.example.quizapp.controller;
 
-import com.example.quizapp.exception.QuizAppException;
-import com.example.quizapp.json.FetchMode;
 import com.example.quizapp.json.QuestionJson;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;
@@ -10,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,13 +51,9 @@ public class QuestionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<QuestionJson> updateQuestion(@PathVariable Long id, @RequestBody QuestionJson questionJson) {
-        try {
-            Question updatedQuestion = questionMapper.mapToQuestion(questionJson);
-            Question savedQuestion = questionService.updateQuestion(id, updatedQuestion);
-            return ResponseEntity.ok(questionMapper.mapToQuestionJson(savedQuestion));
-        } catch (QuizAppException e) {
-            return ResponseEntity.status(e.getCode()).body(null);
-        }
+        Question updatedQuestion = questionMapper.mapToQuestion(questionJson);
+        Question savedQuestion = questionService.updateQuestion(id, updatedQuestion);
+        return ResponseEntity.ok(questionMapper.mapToQuestionJson(savedQuestion));
     }
 
     @DeleteMapping("/{id}")

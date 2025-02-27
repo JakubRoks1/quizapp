@@ -1,7 +1,7 @@
 package com.example.quizapp.service;
 
 import com.example.quizapp.entity.QuestionEntity;
-import com.example.quizapp.exception.QuizAppException;
+import com.example.quizapp.exception.ExceptionType;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.repository.QuestionRepository;
@@ -48,21 +48,21 @@ public class QuestionService {
                     QuestionEntity updatedQuestionEntity = questionRepository.save(existingQuestion);
                     return questionMapper.mapToQuestion(updatedQuestionEntity);
                 })
-                .orElseThrow(() -> new QuizAppException(404, "Question not found"));
+                .orElseThrow(() -> ExceptionType.QUESTION_NOT_FOUND.getException(true));
     }
 
     public void deleteQuestion(Long id) {
         if (questionRepository.existsById(id)) {
             questionRepository.deleteById(id);
         } else {
-            throw new QuizAppException(404, "Question not found");
+            throw ExceptionType.QUESTION_NOT_FOUND.getException();
         }
     }
 
     public Question findById(Long id) {
         return questionRepository.findById(id)
                 .map(questionMapper::mapToQuestion)
-                .orElseThrow(() -> new RuntimeException("Question not found"));
+                .orElseThrow(ExceptionType.QUESTION_NOT_FOUND::getException);
     }
 
     public List<Question> getAllQuestionsWithFilteredProperties(List<String> fields) {
