@@ -1,5 +1,7 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.exception.ExceptionType;
+import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.fixtures.QuizFixtures;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.mappers.QuizMapperImpl;
@@ -29,8 +31,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.boot.autoconfigure.AutoConfigurationPackages.get;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * x1) W przynajmniej jednym teście Json request jest czytany z pliku (ten co wysylasz), i expected json też z pliku - masz dwa pliki, jeden to givenJson drugi expectedJson (x) createQuiz_shouldReturnCreatedQuiz
@@ -60,7 +67,7 @@ class QuizControllerTest {
     public void delete() throws Exception {
         mockMvc
             .perform(MockMvcRequestBuilders.delete("/quizzes/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk());
 
 
         System.out.println("test");
@@ -84,7 +91,7 @@ class QuizControllerTest {
 
         MvcResult result = mockMvc
                 .perform(MockMvcRequestBuilders.get("/quizzes/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(concreteExpectedJson))
                 .andReturn();
 
@@ -140,7 +147,7 @@ class QuizControllerTest {
                         .content(givenJson))
                 .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
                 .andExpectAll(
-                        MockMvcResultMatchers.status().isOk(),
+                        status().isOk(),
                         MockMvcResultMatchers.jsonPath("$.id").value("1"),
                         MockMvcResultMatchers.content().json(expectedJson, JsonCompareMode.STRICT)
                 );
@@ -164,7 +171,7 @@ class QuizControllerTest {
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/quizzes")
                         .param("mode", "COUNT"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andReturn();
 
         JSONAssert.assertEquals(expectedJson, result.getResponse().getContentAsString(), false);
@@ -175,7 +182,7 @@ class QuizControllerTest {
         when(quizService.getQuiz(eq(999L), any(Boolean.class))).thenReturn(Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/quizzes/999"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -183,7 +190,7 @@ class QuizControllerTest {
         when(quizService.deleteQuiz(1L)).thenReturn(true);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/quizzes/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Quiz successfully deleted"));
     }
 
@@ -204,11 +211,12 @@ class QuizControllerTest {
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/quizzes/GetByFields")
                         .param("fields", "id", "quizCategory"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andReturn();
 
         JSONAssert.assertEquals(expectedJson, result.getResponse().getContentAsString(), false);
     }
+
 
     @ParameterizedTest
     @ValueSource(strings = {"1", "100", "999"})
@@ -221,7 +229,7 @@ class QuizControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/quizzes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(modifiedJson))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("ID should not be provided for quiz creation"));
     }
 

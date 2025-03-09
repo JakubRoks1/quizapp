@@ -26,14 +26,7 @@ public class QuizQuestionController {
         Long quizId = quizQuestionJson.getQuizId();
         Long questionId = quizQuestionJson.getQuestionId();
 
-        try {
-            quizQuestionService.addQuizQuestionConnection(quizId, questionId);
-            return ResponseEntity.ok("Connected Quiz and Question successfully.");
-        } catch (QuizAppException e) {
-            if (e.getExceptionType() == ExceptionType.QUIZ_NOT_FOUND || e.getExceptionType() == ExceptionType.QUESTION_NOT_FOUND) {
-                return ResponseEntity.notFound().build();
-            }
-            throw e;
-        }
+        quizQuestionService.addQuizQuestionConnection(quizId, questionId);
+        return ResponseEntity.ok("Connected Quiz and Question successfully.");
     }
 }

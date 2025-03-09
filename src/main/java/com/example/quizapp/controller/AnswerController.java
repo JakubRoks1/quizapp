@@ -51,17 +51,10 @@ public class AnswerController {
 
     @PutMapping("/{id}")
     public ResponseEntity<AnswerJson> updateAnswer(@PathVariable Long id, @RequestBody AnswerJson answerJson) {
-        try {
-            Answer updatedAnswer = answerMapper.mapToAnswer(answerJson);
-            updatedAnswer.setId(id);
-            Answer savedAnswer = answerService.updateAnswer(id, updatedAnswer);
-            return ResponseEntity.ok(answerMapper.mapToAnswerJson(savedAnswer));
-        } catch (QuizAppException e) {
-            if (e.getExceptionType() == ExceptionType.ANSWER_NOT_FOUND) {
-                return ResponseEntity.notFound().build();
-            }
-            throw e;
-        }
+        Answer updatedAnswer = answerMapper.mapToAnswer(answerJson);
+        updatedAnswer.setId(id);
+        Answer savedAnswer = answerService.updateAnswer(id, updatedAnswer);
+        return ResponseEntity.ok(answerMapper.mapToAnswerJson(savedAnswer));
     }
 
     @DeleteMapping("/{id}")
