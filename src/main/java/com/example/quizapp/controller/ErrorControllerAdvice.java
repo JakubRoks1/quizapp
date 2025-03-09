@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * x1) Własna klasa exceptiona - QuizAppException / RuntimeException
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * x2) zamienić wszystkie exceptiony w aplikacji
  * 3) Globalny ErrorHandler to globalny model odpowiedzi ErrorJson - mapowanie może odbywać się przez mapstructa
  */
-@ControllerAdvice(assignableTypes = {ErrorController.class, AnswerController.class})
+@ControllerAdvice
 public class ErrorControllerAdvice {
 
     private final ErrorMapper errorMapper;
@@ -30,12 +29,7 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(QuizAppException.class)
     public ResponseEntity<ErrorJson> handleQuizAppException(QuizAppException e) {
         ErrorJson errorjson = errorMapper.toError(e);
-        return ResponseEntity.status(e.getCode()).body(errorjson);
-    }
-
-    @GetMapping("/quizAppException")
-    public void throwQuizAppException() {
-        throw new QuizAppException(400, "QuizAppException occurred");
+        return ResponseEntity.status(errorjson.code()).body(e.isWithBody() ? errorjson : null);
     }
 
     @ExceptionHandler(value = {ErrorController.MyException.class, ErrorController.ValidationException.class})

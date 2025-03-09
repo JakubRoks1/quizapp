@@ -2,6 +2,7 @@ package com.example.quizapp.service;
 
 import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.entity.QuizEntity;
+import com.example.quizapp.exception.ExceptionType;
 import com.example.quizapp.repository.QuestionRepository;
 import com.example.quizapp.repository.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,9 @@ public class QuizQuestionService {
 //    @Transactional
     public void addQuizQuestionConnection(Long quizId, Long questionId) {
         QuizEntity quiz = quizRepository.findById(quizId)
-                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+                .orElseThrow(ExceptionType.QUIZ_NOT_FOUND::getException);
         QuestionEntity question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new RuntimeException("Question not found"));
+                .orElseThrow(ExceptionType.QUESTION_NOT_FOUND::getException);
 
         quiz.getQuestions().add(question);
         quizRepository.save(quiz);
