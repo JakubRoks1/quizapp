@@ -6,12 +6,10 @@ import java.time.LocalDateTime;
 
 /**
  * Praca domowa
- * xPozbyć się w aplikacji wszystkich innych exceptionów - używamy tylko ExceptionType, usuń wszystkie try-catch
+ * Pozbyć się w aplikacji wszystkich innych exceptionów - używamy tylko ExceptionType, usuń wszystkie try-catch
  * Poprawić testy - stare
- * xNapisać testy nowe - czyli przetestować QuizAppException (sprawdzić timestamp - ew. przygotować kilka rozwiązań), i ExceptionType (@ParametrizedTest / @EnumSource)
- * Napisać test Controllera gdzie leci błąd (MockMVC)
- * xRozserzyć QuizAppException o kod-błędu (ER-001, ER-002) dodać to do body
- * x  - ** dodać pole do exceptiona (i finalnie do body), nazwa klasy gdzie poleciał błąd - bez podawania w parametrze (java-reflect)
+ * Napisać test Controllera gdzie leci błąd (MockMVC) - przypadki negatywne (404 bo czegos nie ma)
+ * xRozserzyć QuizAppException o kod-błędu (ER-001, ER-002) dodać to do body <--- EXCEPTIONTYPE (enum rozszerzyc o wartosc stala nie ordinal)
  */
 @Getter
 public class QuizAppException extends RuntimeException {

@@ -1,25 +1,22 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.exception.ExceptionType;
 import com.example.quizapp.fixtures.QuizFixtures;
 import com.example.quizapp.json.QuestionJson;
+import com.example.quizapp.mappers.ErrorMapper;
+import com.example.quizapp.mappers.ErrorMapperImpl;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.mappers.QuestionMapperImpl;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.service.QuestionService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -29,9 +26,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(SpringExtension.class)
 @WebMvcTest(QuestionController.class)
-@Import({QuestionMapperImpl.class})  // Import the generated mapper implementation
+@Import({QuestionMapperImpl.class, ErrorMapperImpl.class, ErrorControllerAdvice.class})  // Import the generated mapper implementation
 class QuestionControllerTest {
 
     @Autowired
@@ -44,15 +40,10 @@ class QuestionControllerTest {
     private QuestionMapper questionMapper;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private ErrorMapper errorMapper;
 
-    @TestConfiguration
-    static class TestConfig {
-        @Bean
-        public QuestionMapper questionMapper() {
-            return new QuestionMapperImpl();
-        }
-    }
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     void getAllQuestions_shouldReturnListOfQuestions() throws Exception {
@@ -116,6 +107,18 @@ class QuestionControllerTest {
         mockMvc.perform(delete("/questions/{id}", testQuestion.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Question successfully deleted"));
+
+        verify(questionService).deleteQuestion(testQuestion.getId());
+    }
+
+    @Test
+    void deleteQuestion_shouldReturnNOk() throws Exception {
+        Question testQuestion = QuizFixtures.getQuiz().getQuestions().stream().findFirst().orElseThrow();
+        doThrow(ExceptionType.QUESTION_NOT_FOUND.getException()).when(questionService).deleteQuestion(testQuestion.getId());
+
+        mockMvc.perform(delete("/questions/{id}", testQuestion.getId()))
+            .andExpect(status().isNotFound())
+            .andExpect(content().string("Question successfully deleted"));
 
         verify(questionService).deleteQuestion(testQuestion.getId());
     }

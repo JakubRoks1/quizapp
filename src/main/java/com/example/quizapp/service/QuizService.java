@@ -51,7 +51,8 @@ public class QuizService {
     public Quiz updateQuiz(Long id, Quiz quizOverrideFields) {
         var byId = quizRepository.findById(id);
         if (byId.isEmpty()) {
-            throw new RuntimeException("nie-ma");
+//            throw ExceptionType.QUIZ_NOT_FOUND.getException();
+            throw new RuntimeException("nie-ma"); ////////////
         }
 
         var existing = byId.get();

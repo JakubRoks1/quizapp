@@ -2,6 +2,8 @@ package com.example.quizapp.service;
 
 import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.entity.QuizEntity;
+import com.example.quizapp.exception.ExceptionType;
+import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.fixtures.QuizFixtures;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Question;
@@ -152,10 +154,11 @@ class QuizServiceTest {
         Quiz updateRequest = new Quiz();
         when(quizRepository.findById(quizId)).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class,
+        QuizAppException exception = assertThrows(QuizAppException.class, /// /////
                 () -> quizService.updateQuiz(quizId, updateRequest));
 
         assertEquals("nie-ma", exception.getMessage());
+        assertEquals(ExceptionType.QUIZ_NOT_FOUND, exception.getExceptionType());
         verify(quizRepository).findById(quizId);
         verify(quizRepository, never()).save(any());
     }
