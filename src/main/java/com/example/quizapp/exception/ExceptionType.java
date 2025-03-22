@@ -9,7 +9,8 @@ public enum ExceptionType {
     QUESTION_NOT_FOUND(404, "Question not found"),
     ANSWER_NOT_FOUND(404, "Answer not found"),
     VALIDATION_EXCEPTION(400, "Validation exception"),
-    INVALID_FETCH_MODE(400, "Invalid fetch mode provided");
+    INVALID_FETCH_MODE(400, "Invalid fetch mode provided"),
+    UNSUPPORTED_TARGET_TYPE(400, "Unsupported target type");
 
     private final Integer code;
     private final String message;

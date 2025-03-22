@@ -36,7 +36,7 @@ public enum FetchMode {
                 case COUNT -> QuestionJson.Views.GetWithCount.class;
             };
         } else {
-            throw new IllegalArgumentException("Unsupported target type");
+            throw ExceptionType.UNSUPPORTED_TARGET_TYPE.getExceptionWithBody();
         }
     }
 }
