@@ -8,7 +8,8 @@ public enum ExceptionType {
 //    QUIZ_NOT_FOUND(404, "Quiz not found", "NF-001"),
     QUESTION_NOT_FOUND(404, "Question not found"),
     ANSWER_NOT_FOUND(404, "Answer not found"),
-    VALIDATION_EXCEPTION(400, "Validation exception");
+    VALIDATION_EXCEPTION(400, "Validation exception"),
+    INVALID_FETCH_MODE(400, "Invalid fetch mode provided");
 
     private final Integer code;
     private final String message;

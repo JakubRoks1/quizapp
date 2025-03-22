@@ -1,16 +1,25 @@
 package com.example.quizapp.json;
 
+import com.example.quizapp.exception.ExceptionType;
+
+
 public enum FetchMode {
     FULL,
     SHORT,
     COUNT;
 
     public static FetchMode fromString(String mode) {
-        try {
-            return FetchMode.valueOf(mode.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return null;
+        if (mode == null || mode.isEmpty()) {
+            throw ExceptionType.INVALID_FETCH_MODE.getExceptionWithBody();
         }
+
+        for (FetchMode fetchMode : FetchMode.values()) {
+            if (fetchMode.name().equalsIgnoreCase(mode)) {
+                return fetchMode;
+            }
+        }
+
+        throw ExceptionType.INVALID_FETCH_MODE.getExceptionWithBody();
     }
 
     public static Class<?> getJsonViewBasedOnFetchMode(FetchMode mode, Class<?> targetType) {
