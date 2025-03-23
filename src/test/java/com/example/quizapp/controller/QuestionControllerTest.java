@@ -124,6 +124,23 @@ class QuestionControllerTest {
     }
 
     @Test
+    void getQuestionById_QuestionNotFound_ShouldReturn404() throws Exception {
+        Long nonExistQuestionId = 999L;
+        doThrow(ExceptionType.QUESTION_NOT_FOUND.getExceptionWithBody())
+                .when(questionService).findById(nonExistQuestionId);
+
+        mockMvc.perform(get("/questions/{id}", nonExistQuestionId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Question not found"))
+                .andExpect(jsonPath("$.errorCode").exists())
+                .andExpect(jsonPath("$.timestamp").exists());
+
+        verify(questionService).findById(nonExistQuestionId);
+    }
+
+
+
+    @Test
     void getSpecified_shouldReturnFilteredQuestions() throws Exception {
         Question testQuestion = QuizFixtures.getQuiz().getQuestions().stream().findFirst().orElseThrow();
         List<Question> questions = List.of(testQuestion);

@@ -4,22 +4,29 @@ import lombok.Getter;
 
 @Getter
 public enum ExceptionType {
-    QUIZ_NOT_FOUND(404, "Quiz not found"),
-//    QUIZ_NOT_FOUND(404, "Quiz not found", "NF-001"),
-    QUESTION_NOT_FOUND(404, "Question not found"),
-    ANSWER_NOT_FOUND(404, "Answer not found"),
-    VALIDATION_EXCEPTION(400, "Validation exception"),
-    INVALID_FETCH_MODE(400, "Invalid fetch mode provided"),
-    UNSUPPORTED_TARGET_TYPE(400, "Unsupported target type");
+    QUIZ_NOT_FOUND("ER-001", "Quiz not found"),
+    QUESTION_NOT_FOUND("ER-002", "Question not found"),
+    ANSWER_NOT_FOUND("ER-003", "Answer not found"),
+    VALIDATION_EXCEPTION("ER-004", "Validation exception"),
+    INVALID_FETCH_MODE("ER-005", "Invalid fetch mode provided"),
+    UNSUPPORTED_TARGET_TYPE("ER-006", "Unsupported target type");
 
-    private final Integer code;
     private final String message;
-    // errorCode
+    private final String errorCode;
 
-    ExceptionType(int code, String message) {
-        this.code = code;
+    ExceptionType(String message, String errorCode) {
         this.message = message;
+        this.errorCode = errorCode;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
 
     public QuizAppException getException() {
         return new QuizAppException(this, false);

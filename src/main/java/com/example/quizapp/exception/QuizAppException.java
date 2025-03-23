@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 
 /**
  * Praca domowa
- * Pozbyć się w aplikacji wszystkich innych exceptionów - używamy tylko ExceptionType, usuń wszystkie try-catch
+ * xPozbyć się w aplikacji wszystkich innych exceptionów - używamy tylko ExceptionType, usuń wszystkie try-catch
  * Poprawić testy - stare
- * Napisać test Controllera gdzie leci błąd (MockMVC) - przypadki negatywne (404 bo czegos nie ma)
+ * xNapisać test Controllera gdzie leci błąd (MockMVC) - przypadki negatywne (404 bo czegos nie ma)
  * xRozserzyć QuizAppException o kod-błędu (ER-001, ER-002) dodać to do body <--- EXCEPTIONTYPE (enum rozszerzyc o wartosc stala nie ordinal)
  */
 @Getter
@@ -24,13 +24,10 @@ public class QuizAppException extends RuntimeException {
         this.exceptionType = exceptionType;
         this.withBody = withBody;
         this.timestamp = LocalDateTime.now();
-        this.errorCode = generateErrorCode();
+        this.errorCode = exceptionType.getErrorCode();
         this.className = getCallerClassName();
     }
 
-    private String generateErrorCode() {
-        return "ER-" + String.format("%03d", exceptionType.ordinal() + 1);
-    }
 
     private String getCallerClassName() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
