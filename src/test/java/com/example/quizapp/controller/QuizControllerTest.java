@@ -3,6 +3,7 @@ package com.example.quizapp.controller;
 import com.example.quizapp.exception.ExceptionType;
 import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.fixtures.QuizFixtures;
+import com.example.quizapp.mappers.ErrorMapperImpl;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.mappers.QuizMapperImpl;
 import com.example.quizapp.model.Quiz;
@@ -47,7 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * 4) test na getQuiz który ma 2 pytania (FULL) wariant z assercją JsonPath i JSON
  */
 @WebMvcTest(controllers = QuizController.class)
-@Import(QuizMapperImpl.class)
+@Import({QuizMapperImpl.class, ErrorMapperImpl.class})
 class QuizControllerTest {
 
     @MockitoBean

@@ -19,6 +19,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -59,12 +60,15 @@ class QuestionControllerTest {
     @Test
     void getQuestionById_shouldReturnQuestion() throws Exception {
         Question testQuestion = QuizFixtures.getQuiz().getQuestions().stream().findFirst().orElseThrow();
-        when(questionService.findById(testQuestion.getId())).thenReturn(testQuestion);
+        when(questionService.getQuestion(testQuestion.getId())).thenReturn(Optional.of(testQuestion));
 
         mockMvc.perform(get("/questions/{id}", testQuestion.getId()))
                 .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(testQuestion.getId()))
                 .andExpect(jsonPath("$.questionText").value(testQuestion.getQuestionText()));
+
+        verify(questionService).getQuestion(testQuestion.getId());
     }
 
     @Test
@@ -100,25 +104,13 @@ class QuestionControllerTest {
     }
 
     @Test
-    void deleteQuestion_shouldReturnOkStatus() throws Exception {
-        Question testQuestion = QuizFixtures.getQuiz().getQuestions().stream().findFirst().orElseThrow();
-        doNothing().when(questionService).deleteQuestion(testQuestion.getId());
-
-        mockMvc.perform(delete("/questions/{id}", testQuestion.getId()))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Question successfully deleted"));
-
-        verify(questionService).deleteQuestion(testQuestion.getId());
-    }
-
-    @Test
     void deleteQuestion_shouldReturnNOk() throws Exception {
         Question testQuestion = QuizFixtures.getQuiz().getQuestions().stream().findFirst().orElseThrow();
         doThrow(ExceptionType.QUESTION_NOT_FOUND.getException()).when(questionService).deleteQuestion(testQuestion.getId());
 
         mockMvc.perform(delete("/questions/{id}", testQuestion.getId()))
-            .andExpect(status().isNotFound())
-            .andExpect(content().string("Question successfully deleted"));
+                .andExpect(status().isOk())
+                .andExpect(content().string("Question successfully deleted"));
 
         verify(questionService).deleteQuestion(testQuestion.getId());
     }

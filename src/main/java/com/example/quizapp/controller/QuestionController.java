@@ -1,5 +1,6 @@
 package com.example.quizapp.controller;
 
+import com.example.quizapp.exception.ExceptionType;
 import com.example.quizapp.json.QuestionJson;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;
@@ -47,6 +48,7 @@ public class QuestionController {
                 .map(questionMapper::mapToQuestionJson)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+
     }
 
     @PutMapping("/{id}")
@@ -61,7 +63,7 @@ public class QuestionController {
         return questionService.getQuestion(id)
                 .map(question -> {
                     questionService.deleteQuestion(id);
-                    return ResponseEntity.noContent().build();
+                    return ResponseEntity.ok().body((Object) "Question successfully deleted");
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
