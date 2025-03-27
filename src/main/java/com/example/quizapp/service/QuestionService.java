@@ -5,6 +5,7 @@ import com.example.quizapp.exception.ExceptionType;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.repository.QuestionRepository;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +37,14 @@ public class QuestionService {
                 .toList();
     }
 
+    /** DO POPRAWY OPTIONAL JAKO TYP ZWRACANY -> powinien byc bez optionala */
     public Optional<Question> getQuestion(Long id) {
-        return questionRepository.findById(id)
-                .map(questionMapper::mapToQuestion);
+        val question = questionRepository.findById(id).map(questionMapper::mapToQuestion);
+
+        if (question.isEmpty()) {
+            throw ExceptionType.QUESTION_NOT_FOUND.getExceptionWithBody();
+        }
+        return question;
     }
 
     public Question updateQuestion(Long id, Question questionDetails) {

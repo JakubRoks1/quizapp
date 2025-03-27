@@ -1,6 +1,5 @@
 package com.example.quizapp.controller;
 
-import com.example.quizapp.exception.ExceptionType;
 import com.example.quizapp.json.QuestionJson;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;

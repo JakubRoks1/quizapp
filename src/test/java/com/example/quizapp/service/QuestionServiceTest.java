@@ -1,11 +1,13 @@
 package com.example.quizapp.service;
 
 import com.example.quizapp.entity.QuestionEntity;
+import com.example.quizapp.exception.ExceptionType;
 import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.fixtures.QuestionFixtures;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.repository.QuestionRepository;
+import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.AutoCloseableSoftAssertions;
 import org.assertj.core.api.SoftAssertions;
@@ -93,15 +95,12 @@ class QuestionServiceTest {
     }
 
     @Test
-    void getQuestion_WhenDoesNotExist_ShouldReturnEmpty() {
+    void findById_WhenDoesNotExist_ShouldThrowException() {
         when(questionRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Optional<Question> result = questionService.getQuestion(1L);
+        val exception = assertThrows(QuizAppException.class, () -> questionService.getQuestion(1L));
 
-        assertFalse(result.isPresent());
-        verify(questionRepository).findById(1L);
-
-        System.out.println(result);
+        assertEquals(ExceptionType.QUESTION_NOT_FOUND, exception.getExceptionType());
     }
 
     @Test
@@ -160,13 +159,6 @@ class QuestionServiceTest {
         verify(questionRepository).findById(1L);
 
         System.out.println(result);
-    }
-
-    @Test
-    void findById_WhenDoesNotExist_ShouldThrowException() {
-        when(questionRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(RuntimeException.class, () -> questionService.findById(1L));
     }
 
     @Test

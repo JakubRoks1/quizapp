@@ -11,12 +11,14 @@ import com.example.quizapp.model.Question;
 import com.example.quizapp.service.QuestionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 import java.util.Optional;
@@ -118,16 +120,17 @@ class QuestionControllerTest {
     @Test
     void getQuestionById_QuestionNotFound_ShouldReturn404() throws Exception {
         Long nonExistQuestionId = 999L;
-        doThrow(ExceptionType.QUESTION_NOT_FOUND.getExceptionWithBody())
-                .when(questionService).findById(nonExistQuestionId);
-
+        Mockito.when(questionService.getQuestion(nonExistQuestionId)).thenThrow(ExceptionType.QUESTION_NOT_FOUND.getExceptionWithBody());
+//        doThrow(ExceptionType.QUESTION_NOT_FOUND.getExceptionWithBody()).when(questionService).getQuestion(nonExistQuestionId);
         mockMvc.perform(get("/questions/{id}", nonExistQuestionId))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Question not found"))
-                .andExpect(jsonPath("$.errorCode").exists())
-                .andExpect(jsonPath("$.timestamp").exists());
-
-        verify(questionService).findById(nonExistQuestionId);
+            .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+            .andExpectAll(
+                status().isNotFound(),
+                MockMvcResultMatchers.jsonPath("$.message").value("Question not found"),
+                MockMvcResultMatchers.jsonPath("$.errorCode").value("ER-002"),
+                MockMvcResultMatchers.jsonPath("$.timestamp").exists()
+            );
+        verify(questionService).getQuestion(nonExistQuestionId);
     }
 
 
