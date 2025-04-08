@@ -13,6 +13,7 @@ import java.util.Set;
 // używamy AssertJ
 public class QuizFixtures {
 
+
     public static QuizEntity getQuizEntity() {
         QuestionEntity givenQuestion = new QuestionEntity();
         givenQuestion.setId(1L);
@@ -40,8 +41,9 @@ public class QuizFixtures {
     }
 
     public static Quiz givenQuizWithoutQuestions() {
-        var quiz = getQuiz();
-        quiz.setQuestions(null);
+        Quiz quiz = new Quiz();
+        quiz.setQuizCategory("Astronomia");
+        quiz.setDescription("Test Description");
         return quiz;
     }
 }

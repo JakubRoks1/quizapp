@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -19,12 +20,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.json.JsonCompareMode;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,6 +43,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.boot.autoconfigure.AutoConfigurationPackages.get;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 /**
  * x1) W przynajmniej jednym teście Json request jest czytany z pliku (ten co wysylasz), i expected json też z pliku - masz dwa pliki, jeden to givenJson drugi expectedJson (x) createQuiz_shouldReturnCreatedQuiz
@@ -48,6 +54,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * 4) test na getQuiz który ma 2 pytania (FULL) wariant z assercją JsonPath i JSON
  */
 @WebMvcTest(controllers = QuizController.class)
+@ExtendWith(SpringExtension.class)
 @Import({QuizMapperImpl.class, ErrorMapperImpl.class})
 class QuizControllerTest {
 
@@ -55,27 +62,24 @@ class QuizControllerTest {
     private QuizService quizService;
 
     @Autowired
-//    @MockitoBean
     private QuizMapper quizMapper;
 
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ObjectMapper objectMapper;
 
-
     @Test
-    public void delete() throws Exception {
-        mockMvc
-            .perform(MockMvcRequestBuilders.delete("/quizzes/1"))
+    void givenQuizId_whenDeleteQuiz_thenShouldReturnOkStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/quizzes/1"))
                 .andExpect(status().isOk());
-
 
         System.out.println("test");
     }
 
     @Test
-    public void getById() throws Exception {
+    void givenQuizId_whenGetById_thenShouldReturnQuiz() throws Exception {
         val expectedJsonTemplate = """
         {
           "id": ${id},
@@ -90,8 +94,7 @@ class QuizControllerTest {
 
         when(quizService.getQuiz(eq(1L), any(Boolean.class))).thenReturn(Optional.of(QuizFixtures.getQuiz()));
 
-        MvcResult result = mockMvc
-                .perform(MockMvcRequestBuilders.get("/quizzes/1"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/quizzes/1"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(concreteExpectedJson))
                 .andReturn();
@@ -101,11 +104,10 @@ class QuizControllerTest {
 
         Quiz quiz = objectMapper.readValue(contentAsString, Quiz.class);
         System.out.println("Quiz: " + quiz);
-
     }
 
     @Test
-    public void templateTest() {
+    void givenJsonTemplate_whenReplacePlaceholders_thenShouldReplacePlaceholdersInTemplate() {
         val givenJsonTemplate = """
             {
               "quizCategory" : ${quizCategory},
@@ -121,7 +123,7 @@ class QuizControllerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"field1", "field2"})
-    public void paramsTest(String newField) {
+    void givenNewField_whenParamsTest_thenShouldIncludeFieldInJson(String newField) {
         val givenJsonTemplate = """
             {
               "quizCategory" : "Astronomia",
@@ -155,7 +157,7 @@ class QuizControllerTest {
     }
 
     @Test
-    void getAllQuizzes_countMode_shouldReturnQuizzesWithQuestionCount() throws Exception {
+    void whenGetAllQuizzesInCountMode_thenShouldReturnQuizzesWithQuestionCount() throws Exception {
         List<Quiz> quizzes = List.of(QuizFixtures.getQuiz());
         when(quizService.getAllQuizzes()).thenReturn(quizzes);
 
@@ -179,7 +181,7 @@ class QuizControllerTest {
     }
 
     @Test
-    void getQuizById_notFound_shouldReturnNotFound() throws Exception {
+    void givenNonExistingQuizId_whenGetQuizById_thenShouldReturnNotFound() throws Exception {
         when(quizService.getQuiz(eq(999L), any(Boolean.class))).thenReturn(Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/quizzes/999"))
@@ -187,7 +189,7 @@ class QuizControllerTest {
     }
 
     @Test
-    void deleteQuiz_shouldReturnOkStatus() throws Exception {
+    void whenDeleteQuiz_thenShouldReturnOkStatus() throws Exception {
         when(quizService.deleteQuiz(1L)).thenReturn(true);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/quizzes/1"))
@@ -196,7 +198,7 @@ class QuizControllerTest {
     }
 
     @Test
-    void getSpecified_shouldReturnFilteredQuizzes() throws Exception {
+    void givenFields_whenGetSpecifiedQuizzes_thenShouldReturnFilteredQuizzes() throws Exception {
         List<Quiz> quizzes = List.of(QuizFixtures.getQuiz());
         List<String> fields = List.of("id", "quizCategory");
 
@@ -218,21 +220,24 @@ class QuizControllerTest {
         JSONAssert.assertEquals(expectedJson, result.getResponse().getContentAsString(), false);
     }
 
-
     @ParameterizedTest
     @ValueSource(strings = {"1", "100", "999"})
-    void createQuiz_withProvidedId_shouldReturnBadRequest(String id) throws Exception {
+    void givenProvidedId_whenCreateQuiz_thenShouldReturnBadRequest(String id) throws Exception {
         String baseJson = new String(Files.readAllBytes(Paths.get("jsons/separate/givenJson.json")));
         JSONObject jsonObject = new JSONObject(baseJson);
         jsonObject.put("id", id);
         String modifiedJson = jsonObject.toString();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/quizzes")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/quizzes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(modifiedJson))
                 .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("ID should not be provided for quiz creation"));
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+        String content = response.getContentAsString();
+        System.out.println("Response content: " + content);
+        assertThat(content).isNotEmpty();
+        assertThat(content).contains("must be null");
     }
-
-
 }

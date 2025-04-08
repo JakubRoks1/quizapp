@@ -4,7 +4,6 @@ import com.example.quizapp.entity.QuestionEntity;
 import com.example.quizapp.entity.QuizEntity;
 import com.example.quizapp.exception.ExceptionType;
 import com.example.quizapp.exception.QuizAppException;
-import com.example.quizapp.fixtures.QuizFixtures;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.model.Quiz;
@@ -20,7 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -46,12 +46,15 @@ class QuizServiceTest {
         quizService = new QuizService(quizRepository, quizMapper);
         quizId = 1L;
 
-        quiz = QuizFixtures.givenQuizWithoutQuestions();
+        quiz = new Quiz();
+        quiz.setId(quizId);
+        quiz.setQuizCategory("Test Category");
+        quiz.setDescription("Test Description");
         quizEntity = quizMapper.mapToQuizEntity(quiz);
     }
 
     @Test
-    void getQuizWithQuestions_ShouldReturnQuizWithQuestions() {
+    void givenQuizWithQuestions_whenGetQuiz_thenShouldReturnQuizWithQuestions() {
         Question question = new Question();
         question.setId(1L);
         quiz.setQuestions(Set.of(question));
@@ -64,15 +67,15 @@ class QuizServiceTest {
 
         Optional<Quiz> result = quizService.getQuiz(quizId, true);
 
-        assertTrue(result.isPresent());
-        assertEquals(quizEntity.getId(), result.get().getId());
-        assertEquals(quizEntity.getQuestions().size(), result.get().getQuestions().size());
+        assertThat(result).isPresent();
+        assertThat(result.get().getId()).isEqualTo(quizEntity.getId());
+        assertThat(result.get().getQuestions()).hasSize(1);
 
-        System.out.println(result);
+        verify(quizRepository).findByIdWithQuestions(quizId);
     }
 
     @Test
-    void getQuizWithoutQuestions_ShouldReturnQuizWithoutQuestions() {
+    void givenQuizWithoutQuestions_whenGetQuiz_thenShouldReturnQuizWithoutQuestions() {
         QuizEntity entityWithoutQuestions = quizMapper.mapToQuizEntity(quiz);
         entityWithoutQuestions.setQuestions(Set.of());
 
@@ -80,29 +83,28 @@ class QuizServiceTest {
 
         Optional<Quiz> result = quizService.getQuiz(quizId, false);
 
-        assertTrue(result.isPresent());
-        assertEquals(entityWithoutQuestions.getId(), result.get().getId());
-        assertTrue(result.get().getQuestions().isEmpty());
+        assertThat(result).isPresent();
+        assertThat(result.get().getId()).isEqualTo(entityWithoutQuestions.getId());
+        assertThat(result.get().getQuestions()).isEmpty();
 
-        System.out.println(result);
+        verify(quizRepository).findByIdWithoutQuestions(quizId);
     }
 
     @Test
-    void addQuiz_ShouldSaveAndReturnQuiz() {
+    void givenValidQuiz_whenAddQuiz_thenShouldSaveAndReturnQuiz() {
         when(quizRepository.save(any(QuizEntity.class))).thenReturn(quizEntity);
 
         Quiz result = quizService.addQuiz(quiz);
 
-        assertNotNull(result);
-        assertEquals("Test Category", result.getQuizCategory());
-        assertEquals("Test Description", result.getDescription());
-        verify(quizRepository).save(any(QuizEntity.class));
+        assertThat(result).isNotNull();
+        assertThat(result.getQuizCategory()).isEqualTo("Test Category");
+        assertThat(result.getDescription()).isEqualTo("Test Description");
 
-        System.out.println(result);
+        verify(quizRepository).save(any(QuizEntity.class));
     }
 
     @Test
-    void addQuizWithNullValues_ShouldSaveWithNullValues() {
+    void givenQuizWithNullValues_whenAddQuiz_thenShouldSaveWithNullValues() {
         Quiz emptyQuiz = new Quiz();
         QuizEntity emptyEntity = quizMapper.mapToQuizEntity(emptyQuiz);
         emptyEntity.setId(quizId);
@@ -111,22 +113,26 @@ class QuizServiceTest {
 
         Quiz result = quizService.addQuiz(emptyQuiz);
 
-        assertNotNull(result);
-        assertNull(result.getQuizCategory());
-        assertNull(result.getDescription());
+        assertThat(result).isNotNull();
+        assertThat(result.getQuizCategory()).isNull();
+        assertThat(result.getDescription()).isNull();
 
-        System.out.println(result);
+        verify(quizRepository).save(any(QuizEntity.class));
     }
 
     @Test
-    void addQuiz_WhenRepositoryThrowsException_ShouldPropagateException() {
+    void givenRepositoryThrowsException_whenAddQuiz_thenShouldPropagateException() {
         when(quizRepository.save(any(QuizEntity.class))).thenThrow(new RuntimeException("Database save error"));
 
-        assertThrows(RuntimeException.class, () -> quizService.addQuiz(quiz));
+        assertThatThrownBy(() -> quizService.addQuiz(quiz))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Database save error");
+
+        verify(quizRepository).save(any(QuizEntity.class));
     }
 
     @Test
-    void updateExistingQuiz_ShouldUpdateSuccessfully() {
+    void givenExistingQuiz_whenUpdateQuiz_thenShouldUpdateSuccessfully() {
         Quiz updateRequest = new Quiz();
         updateRequest.setQuizCategory("New Category");
         updateRequest.setDescription("New Description");
@@ -140,56 +146,54 @@ class QuizServiceTest {
 
         Quiz result = quizService.updateQuiz(quizId, updateRequest);
 
-        assertNotNull(result);
-        assertEquals("New Category", result.getQuizCategory());
-        assertEquals("New Description", result.getDescription());
+        assertThat(result).isNotNull();
+        assertThat(result.getQuizCategory()).isEqualTo("New Category");
+        assertThat(result.getDescription()).isEqualTo("New Description");
+
         verify(quizRepository).findById(quizId);
         verify(quizRepository).save(any(QuizEntity.class));
-
-        System.out.println(result);
     }
 
     @Test
-    void updateNonExistingQuiz_ShouldThrowException() {
+    void givenNonExistingQuiz_whenUpdateQuiz_thenShouldThrowException() {
         Quiz updateRequest = new Quiz();
         when(quizRepository.findById(quizId)).thenReturn(Optional.empty());
 
-        QuizAppException exception = assertThrows(QuizAppException.class, /// /////
+        QuizAppException exception = assertThrows(QuizAppException.class,
                 () -> quizService.updateQuiz(quizId, updateRequest));
 
-        assertEquals("nie-ma", exception.getMessage());
-        assertEquals(ExceptionType.QUIZ_NOT_FOUND, exception.getExceptionType());
+        assertThat(exception.getMessage()).isEqualTo(ExceptionType.QUIZ_NOT_FOUND.getMessage());
+        assertThat(exception.getExceptionType()).isEqualTo(ExceptionType.QUIZ_NOT_FOUND);
+
         verify(quizRepository).findById(quizId);
-        verify(quizRepository, never()).save(any());
+        verify(quizRepository, never()).save(any(QuizEntity.class));
     }
 
     @Test
-    void getAllQuizzes_WhenEmpty_ShouldReturnEmptyList() {
+    void givenEmptyQuizList_whenGetAllQuizzes_thenShouldReturnEmptyList() {
         when(quizRepository.findAll()).thenReturn(Collections.emptyList());
 
         List<Quiz> result = quizService.getAllQuizzes();
 
-        assertTrue(result.isEmpty());
-        verify(quizRepository).findAll();
+        assertThat(result).isEmpty();
 
-        System.out.println(result);
+        verify(quizRepository).findAll();
     }
 
     @Test
-    void getAllQuizzes_WithMultipleQuizzes_ShouldReturnAllQuizzes() {
+    void givenMultipleQuizzes_whenGetAllQuizzes_thenShouldReturnAllQuizzes() {
         List<QuizEntity> entities = Arrays.asList(quizEntity, quizEntity);
         when(quizRepository.findAll()).thenReturn(entities);
 
         List<Quiz> result = quizService.getAllQuizzes();
 
-        assertEquals(2, result.size());
-        verify(quizRepository).findAll();
+        assertThat(result).hasSize(2);
 
-        System.out.println(result);
+        verify(quizRepository).findAll();
     }
 
     @Test
-    void deleteQuizWithoutQuestions_ShouldDeleteSuccessfully() {
+    void givenQuizWithoutQuestions_whenDeleteQuiz_thenShouldDeleteSuccessfully() {
         QuizEntity emptyQuizEntity = quizMapper.mapToQuizEntity(quiz);
         emptyQuizEntity.setId(quizId);
         emptyQuizEntity.setQuestions(Collections.emptySet());
@@ -198,15 +202,14 @@ class QuizServiceTest {
 
         boolean result = quizService.deleteQuiz(quizId);
 
-        assertTrue(result);
+        assertThat(result).isTrue();
+
         verify(quizRepository).findByIdWithQuestions(quizId);
         verify(quizRepository).delete(emptyQuizEntity);
-
-        System.out.println(result);
     }
 
     @Test
-    void deleteQuizWithQuestions_ShouldThrowException() {
+    void givenQuizWithQuestions_whenDeleteQuiz_thenShouldThrowException() {
         QuizEntity quizWithQuestions = quizMapper.mapToQuizEntity(quiz);
         QuestionEntity questionEntity = new QuestionEntity();
         questionEntity.setId(1L);
@@ -217,22 +220,19 @@ class QuizServiceTest {
         RuntimeException exception = assertThrows(RuntimeException.class,
                 () -> quizService.deleteQuiz(quizId));
 
-        assertEquals("Cannot delete quiz with questions", exception.getMessage());
-        verify(quizRepository, never()).delete(any());
+        assertThat(exception.getMessage()).isEqualTo("Cannot delete quiz with questions");
+
+        verify(quizRepository, never()).delete(any(QuizEntity.class));
     }
 
     @Test
-    void deleteNonExistingQuiz_ShouldReturnFalse() {
+    void givenNonExistingQuiz_whenDeleteQuiz_thenShouldReturnFalse() {
         when(quizRepository.findByIdWithQuestions(quizId)).thenReturn(Optional.empty());
 
         boolean result = quizService.deleteQuiz(quizId);
 
-        assertFalse(result);
-        verify(quizRepository, never()).delete(any());
+        assertThat(result).isFalse();
 
-        System.out.println(result);
+        verify(quizRepository, never()).delete(any(QuizEntity.class));
     }
-
-    // postaraj się użyć QuizMappera prawdziwego testach
-    // controller na questiony + test (metoda rest + testy)
 }

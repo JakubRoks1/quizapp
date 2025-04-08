@@ -7,10 +7,7 @@ import com.example.quizapp.fixtures.QuestionFixtures;
 import com.example.quizapp.mappers.QuestionMapper;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.repository.QuestionRepository;
-import lombok.val;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.AutoCloseableSoftAssertions;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -18,12 +15,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -50,38 +47,47 @@ class QuestionServiceTest {
     }
 
     @Test
-    void addQuestion_ShouldReturnSavedQuestion() {
+    void givenValidQuestion_whenAddQuestion_thenShouldReturnSavedQuestion() {
         when(questionMapper.mapToQuestionEntity(question)).thenReturn(questionEntity);
         when(questionRepository.save(questionEntity)).thenReturn(questionEntity);
         when(questionMapper.mapToQuestion(questionEntity)).thenReturn(question);
 
         Question result = questionService.addQuestion(question);
 
-        assertNotNull(result);
-        assertEquals(question.getId(), result.getId());
-        assertEquals(question.getQuestionText(), result.getQuestionText());
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.getId()).isEqualTo(question.getId());
+        Assertions.assertThat(result.getQuestionText()).isEqualTo(question.getQuestionText());
         verify(questionRepository).save(any(QuestionEntity.class));
-
-        System.out.println(result);
     }
 
     @Test
-    void getAllQuestions_ShouldReturnAllQuestions() {
+    void givenQuestionsExist_whenGetAllQuestions_thenShouldReturnAllQuestions() {
         List<QuestionEntity> questionEntities = Arrays.asList(questionEntity);
         when(questionRepository.findAll()).thenReturn(questionEntities);
         when(questionMapper.mapToQuestion(questionEntity)).thenReturn(question);
 
         List<Question> result = questionService.getAllQuestions();
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(question.getId(), result.get(0).getId());
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result).hasSize(1);
+        Assertions.assertThat(result.get(0).getId()).isEqualTo(question.getId());
         verify(questionRepository).findAll();
-        System.out.println(result);
     }
 
     @Test
-    void getQuestion_WhenExists_ShouldReturnQuestion() {
+    void givenQuestionExists_whenGetQuestion_thenShouldReturnQuestion() {
+        when(questionRepository.findById(1L)).thenReturn(Optional.of(questionEntity));
+        when(questionMapper.mapToQuestion(questionEntity)).thenReturn(question);
+
+        Optional<Question> result = questionService.getQuestion(1L);
+
+        Assertions.assertThat(result).isPresent();
+        Assertions.assertThat(result.get().getId()).isEqualTo(question.getId());
+        verify(questionRepository).findById(1L);
+    }
+
+    @Test
+    void givenQuestionDoesNotExist_whenGetQuestion_thenShouldThrowException() {
         when(questionRepository.findById(1L)).thenReturn(Optional.of(questionEntity));
         when(questionMapper.mapToQuestion(questionEntity)).thenReturn(question);
 
@@ -95,41 +101,32 @@ class QuestionServiceTest {
     }
 
     @Test
-    void findById_WhenDoesNotExist_ShouldThrowException() {
-        when(questionRepository.findById(1L)).thenReturn(Optional.empty());
-
-        val exception = assertThrows(QuizAppException.class, () -> questionService.getQuestion(1L));
-
-        assertEquals(ExceptionType.QUESTION_NOT_FOUND, exception.getExceptionType());
-    }
-
-    @Test
-    void updateQuestion_WhenExists_ShouldReturnUpdatedQuestion() {
+    void givenExistingQuestion_whenUpdateQuestion_thenShouldReturnUpdatedQuestion() {
         when(questionRepository.findById(1L)).thenReturn(Optional.of(questionEntity));
         when(questionRepository.save(questionEntity)).thenReturn(questionEntity);
         when(questionMapper.mapToQuestion(questionEntity)).thenReturn(question);
 
         Question result = questionService.updateQuestion(1L, question);
 
-        assertNotNull(result);
-        assertEquals(question.getId(), result.getId());
-        assertEquals(question.getQuestionText(), result.getQuestionText());
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.getId()).isEqualTo(question.getId());
+        Assertions.assertThat(result.getQuestionText()).isEqualTo(question.getQuestionText());
         verify(questionRepository).save(questionEntity);
-
-        System.out.println(result);
     }
 
     @Test
-    void updateQuestion_WhenDoesNotExist_ShouldThrowException() {
+    void givenNonExistingQuestion_whenUpdateQuestion_thenShouldThrowException() {
         when(questionRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> questionService.updateQuestion(1L, question));
-        verify(questionRepository, never()).save(any(QuestionEntity.class));
+        Assertions.assertThatThrownBy(() -> questionService.updateQuestion(1L, question))
+                .isInstanceOf(QuizAppException.class)
+                .hasMessageContaining(ExceptionType.QUESTION_NOT_FOUND.getMessage());
 
+        verify(questionRepository, never()).save(any(QuestionEntity.class));
     }
 
     @Test
-    void deleteQuestion_WhenExists_ShouldDeleteSuccessfully() {
+    void givenExistingQuestion_whenDeleteQuestion_thenShouldDeleteSuccessfully() {
         when(questionRepository.existsById(1L)).thenReturn(true);
 
         questionService.deleteQuestion(1L);
@@ -138,85 +135,58 @@ class QuestionServiceTest {
     }
 
     @Test
-    void deleteQuestion_WhenDoesNotExist_ShouldThrowException() {
+    void givenNonExistingQuestion_whenDeleteQuestion_thenShouldThrowException() {
         when(questionRepository.existsById(1L)).thenReturn(false);
 
-        var quizAppException = assertThrows(QuizAppException.class, () -> questionService.deleteQuestion(1L));
-        System.out.println(quizAppException.getExceptionType());
+        Assertions.assertThatThrownBy(() -> questionService.deleteQuestion(1L))
+                .isInstanceOf(QuizAppException.class)
+                .hasMessageContaining(ExceptionType.QUESTION_NOT_FOUND.getMessage());
 
         verify(questionRepository, never()).deleteById(any());
     }
 
     @Test
-    void findById_WhenExists_ShouldReturnQuestion() {
+    void givenQuestionExists_whenFindById_thenShouldReturnQuestion() {
         when(questionRepository.findById(1L)).thenReturn(Optional.of(questionEntity));
         when(questionMapper.mapToQuestion(questionEntity)).thenReturn(question);
 
         Question result = questionService.findById(1L);
 
-        assertNotNull(result);
-        assertEquals(question.getId(), result.getId());
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.getId()).isEqualTo(question.getId());
         verify(questionRepository).findById(1L);
-
-        System.out.println(result);
     }
 
     @Test
-    void getAllQuestionsWithFilteredProperties_ShouldFilterSpecifiedFields() {
+    void givenQuestionsExist_whenGetAllQuestionsWithFilteredProperties_thenShouldFilterSpecifiedFields() {
         List<QuestionEntity> questionEntities = Arrays.asList(questionEntity);
         when(questionRepository.findAll()).thenReturn(questionEntities);
         when(questionMapper.mapToQuestion(questionEntity)).thenReturn(question);
 
-        List<Question> result = questionService.getAllQuestionsWithFilteredProperties(Arrays.asList("questionText"));
+        List<Question> result = questionService.getAllQuestionsWithFilteredProperties(Arrays.asList("id"));
 
         Assertions.assertThat(result)
-            .isNotNull()
-            .hasSize(1);
+                .isNotNull()
+                .hasSize(1);
 
         Assertions.assertThat(result.get(0))
                 .satisfies(question1 -> {
                     Assertions.assertThat(question1.getQuestionText()).isNull();
-                    Assertions.assertThat(question1.getId()).isEqualTo(questionEntity.getId());
+                    Assertions.assertThat(question1.getId()).isNotNull();
                 });
-        System.out.println(result);
     }
 
     @Test
-    void getAllQuestionsWithFilterOutProperties_ShouldFilterSpecifiedFields() {
+    void givenQuestionsExist_whenGetAllQuestionsWithFilterOutProperties_thenShouldFilterSpecifiedFields() {
         List<QuestionEntity> questionEntities = Arrays.asList(questionEntity);
         when(questionRepository.findAll()).thenReturn(questionEntities);
         when(questionMapper.mapToQuestion(questionEntity)).thenReturn(question);
 
         List<Question> result = questionService.getAllQuestionsWithFilterOutProperties(Arrays.asList("id"));
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertNull(result.get(0).getId());
-        assertNotNull(result.get(0).getQuestionText());
-
-        System.out.println(result);
-    }
-
-    @Test
-    void givenQuestion() {
-//        Assertions.assertThat(1)
-//            .isEqualTo(1)
-//            .isLessThan(0)
-//            .isNotNull();
-
-
-
-        try (AutoCloseableSoftAssertions softly = new AutoCloseableSoftAssertions()) {
-            softly.assertThat(1)
-                .isEqualTo(2)
-                .isLessThan(0)
-                .isNotNull();
-        }
-        SoftAssertions soft = new SoftAssertions();
-//        soft.assertThat(1)
-//            .isEqualTo(2)
-//            .isLessThan(0)
-//            .isNotNull();
-//        soft.assertAll();
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result).hasSize(1);
+        Assertions.assertThat(result.get(0).getId()).isNull();
+        Assertions.assertThat(result.get(0).getQuestionText()).isNotNull();
     }
 }

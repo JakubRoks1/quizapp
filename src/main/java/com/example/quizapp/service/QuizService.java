@@ -1,11 +1,13 @@
 package com.example.quizapp.service;
 
 import com.example.quizapp.entity.QuizEntity;
+import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.mappers.QuizMapper;
 import com.example.quizapp.model.Quiz;
 import com.example.quizapp.repository.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.quizapp.exception.ExceptionType;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,8 +53,7 @@ public class QuizService {
     public Quiz updateQuiz(Long id, Quiz quizOverrideFields) {
         var byId = quizRepository.findById(id);
         if (byId.isEmpty()) {
-//            throw ExceptionType.QUIZ_NOT_FOUND.getException();
-            throw new RuntimeException("nie-ma"); ////////////
+            throw ExceptionType.QUIZ_NOT_FOUND.getException();
         }
 
         var existing = byId.get();

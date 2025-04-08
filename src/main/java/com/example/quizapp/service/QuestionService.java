@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -72,28 +73,41 @@ public class QuestionService {
     }
 
     public List<Question> getAllQuestionsWithFilteredProperties(List<String> fields) {
+        List<QuestionEntity> questionEntities = questionRepository.findAll();
+        List<Question> questions = questionEntities.stream()
+                .map(questionMapper::mapToQuestion)
+                .collect(Collectors.toList());
+
+        System.out.println("Before filtering: " + questions);
+        questions.forEach(question -> retainFields(question, fields));
+        System.out.println("After filtering: " + questions);
+
+        return questions;
+    }
+
+    private void retainFields(Question question, List<String> fields) {
+        if (!fields.contains("questionText")) {
+            question.setQuestionText(null);
+        }
+        if (!fields.contains("id")) {
+            question.setId(null);
+        }
+    }
+
+    public List<Question> getAllQuestionsWithFilterOutProperties(List<String> fields) {
         List<Question> allQuestions = getAllQuestions();
-        allQuestions.forEach(question -> filterFields(question, fields));
+        allQuestions.forEach(question -> filterOutFields(question, fields));
         return allQuestions;
     }
 
-    private void filterFields(Question question, List<String> fields) {
+    private void filterOutFields(Question question, List<String> fields) {
         if (fields.contains("questionText")) {
             question.setQuestionText(null);
         }
         if (fields.contains("id")) {
             question.setId(null);
         }
-
     }
-
-    public List<Question> getAllQuestionsWithFilterOutProperties(List<String> fields) {
-        var allQuestions = getAllQuestions();
-        allQuestions.forEach(question -> filterFields(question, fields));
-        return allQuestions;
-    }
-
-
 
 
 }

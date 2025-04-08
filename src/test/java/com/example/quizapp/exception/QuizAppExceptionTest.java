@@ -14,7 +14,7 @@ class QuizAppExceptionTest {
 
     @ParameterizedTest
     @EnumSource(ExceptionType.class)
-    void constructor_shouldSetAllFields(ExceptionType givenExceptionType) {
+    void givenExceptionType_whenConstructorInvoked_thenShouldSetAllFields(ExceptionType givenExceptionType) {
         boolean withBody = true;
         val givenLocalDateTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0);
 
@@ -34,23 +34,6 @@ class QuizAppExceptionTest {
                 assertThat(ex.getClassName()).isEqualTo(QuizAppExceptionTest.class.getName());
                 assertThat(ex.getTimestamp()).isEqualTo(givenLocalDateTime);
             });
-
-//        assertThat(exception)
-//            .hasMessage(givenExceptionType.getMessage())
-//            .extracting(
-//                QuizAppException::getExceptionType,
-//                QuizAppException::isWithBody,
-//                QuizAppException::getErrorCode,
-//                QuizAppException::getClassName,
-//                QuizAppException::getTimestamp
-//            )
-//            .containsExactly(
-//                givenExceptionType,
-//                withBody,
-//                expectedErrorCode,
-//                QuizAppExceptionTest.class.getName(),
-//                givenLocalDateTime
-//            );
 
         System.out.println(exception.getTimestamp());
     }
