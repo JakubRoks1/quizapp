@@ -1,7 +1,5 @@
 package com.example.quizapp.controller;
 
-import com.example.quizapp.exception.ExceptionType;
-import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.json.AnswerJson;
 import com.example.quizapp.mappers.AnswerMapper;
 import com.example.quizapp.model.Answer;
@@ -20,7 +18,8 @@ public class AnswerController {
     private final AnswerMapper answerMapper;
 
     @Autowired
-    public AnswerController(AnswerService answerService, AnswerMapper answerMapper) {
+    public AnswerController(AnswerService answerService,
+                            AnswerMapper answerMapper) {
         this.answerService = answerService;
         this.answerMapper = answerMapper;
     }

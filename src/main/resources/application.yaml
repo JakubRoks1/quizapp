@@ -23,12 +23,23 @@ server:
     include-message: always
     include-stacktrace: always
 
-custom:
-  flag: false
-  number: 12
-
 logging:
   level:
     root: INFO
 
 #debug: true
+
+custom:
+  flag: false
+  number: 12
+
+person:
+  firST-name: Mateusz
+  lastName: Kowalski
+  AGE: 35
+  middle-name: Andrzej
+  is-married: true
+  birth-date: 2007-12-01
+  duration: 60
+#  gender: X
+#  address: warsaw
