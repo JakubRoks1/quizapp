@@ -41,5 +41,21 @@ person:
   is-married: true
   birth-date: 2007-12-01
   duration: 60
+  numbers:
+    - 1
+    - 1
+    - 4
+    - 5
+  map:
+    "[key*1]": true
+    key2: false
+  pet:
+    name: Reksio
+    color: black
+  cats:
+    - name: Tom
+      color: red
+    - name: Jerry
+      color: brown
 #  gender: X
 #  address: warsaw
