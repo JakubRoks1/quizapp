@@ -34,7 +34,7 @@ custom:
   number: 12
 
 person:
-  firST-name: Mateusz
+  firST-name: MateuszMateuszMateusz
   lastName: Kowalski
   AGE: 35
   middle-name: Andrzej
@@ -57,5 +57,19 @@ person:
       color: red
     - name: Jerry
       color: brown
+
+  config:
+    appName: QuizApp
+    defaultGender: MALE
+    Languages:
+      - EN
+      - PL
+      - DE
+    metadata:
+      theme: dark
+      version: 1.0
+    nestedConfig:
+      groupName: Admin Group
+      groupSize: 10
 #  gender: X
 #  address: warsaw
