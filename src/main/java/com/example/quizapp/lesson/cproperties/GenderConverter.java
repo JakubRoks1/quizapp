@@ -1,4 +1,4 @@
-package com.example.quizapp.cproperties;
+package com.example.quizapp.lesson.cproperties;
 
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.core.convert.converter.Converter;

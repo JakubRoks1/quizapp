@@ -1,4 +1,4 @@
-package com.example.quizapp.configproperties;
+package com.example.quizapp.lesson.configproperties;
 
 import jakarta.validation.constraints.NotNull;
 

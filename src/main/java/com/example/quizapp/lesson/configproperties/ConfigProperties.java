@@ -1,9 +1,8 @@
-package com.example.quizapp.configproperties;
+package com.example.quizapp.lesson.configproperties;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,5 @@ public record ConfigProperties(
         @Size(min = 1) List<String> Languages, // List mapping
         Map<String, String> metadata, // Map structure
         NestedConfig nestedConfig // Nested configuration properties
-
-
         ) {
 }

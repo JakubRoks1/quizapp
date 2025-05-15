@@ -1,4 +1,4 @@
-package com.example.quizapp.cproperties;
+package com.example.quizapp.lesson.cproperties;
 
 import lombok.AllArgsConstructor;
 
