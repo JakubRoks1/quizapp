@@ -31,7 +31,7 @@ logging:
 
 custom:
   flag: false
-  number: 12
+  number: 3
 
 person:
   firST-name: MateuszMateuszMateusz

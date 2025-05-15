@@ -4,14 +4,18 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class FinalService {
 
+    private final Optional<DebugService> debugService;
     private Calculator firstService;
 
     @Autowired
-    public FinalService(Calculator c) {
+    public FinalService(Calculator c, Optional<DebugService> debugService) {
         this.firstService = c;
+        this.debugService = debugService;
     }
 
 //    @Autowired
@@ -32,6 +36,7 @@ public class FinalService {
         System.out.println("*************");
         System.out.println("*************");
         System.out.println(firstService);
+        debugService.ifPresent(DebugService::debug);
     }
 
     public int caluclate() {
