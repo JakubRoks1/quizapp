@@ -1,15 +1,25 @@
 package com.example.quizapp;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 
-// praca domowa wykonac CRUD dla wszysztkich modeli (C-Create, U-Update, D-Delete, R-Read)
-// RestController (orzymuje UserJSON) -> Service (otrzymuje User) -> Repository (otrzymuje UserEntity) -- zapis zap. UserEntity -- > Service (zwaraca User) ---> RestController zwraca JSONa
-// dopisać encje entity,json,mappers,model
-// żeby nie nadpisywało ID
-// bez relacji
-// questionController [x]
+/**
+ * Aplikacja potrafi załadować quiz, stworzyć pytania do quiz (POSTami)
+ * Usuńmy na razie odpowiedzi - wielokrotny wybór, ma być jedna odpoweidź - przykład Trzecia planeta od słonca? Ziemia
+ * Skonfiguruj aplikację tak, aby dodane quizy były pernamentne - tzn. po restarcie aplikacji dane dalej istniały
+ * usuwanie pytan / usuwanie quizów (+ edycja)
+ *
+ */
 @SpringBootApplication
+@ComponentScan(basePackageClasses = QuizAppApplication.class, // lub pozostaw domyślnie
+    excludeFilters = @ComponentScan.Filter(
+        type = FilterType.REGEX,
+        pattern = "com\\.example\\.quizapp\\.lesson\\..*"
+    ))
+@SpringBootConfiguration
 public class QuizAppApplication {
 
     public static void main(String[] args) {
