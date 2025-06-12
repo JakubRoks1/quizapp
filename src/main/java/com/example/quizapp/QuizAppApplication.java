@@ -23,6 +23,6 @@ import org.springframework.context.annotation.FilterType;
 public class QuizAppApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(QuizAppApplication.class, args);
+         SpringApplication.run(QuizAppApplication.class, args);
     }
 }

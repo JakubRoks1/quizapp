@@ -1,5 +1,6 @@
 # Praca domowa konfiguraja do yamla
 
+
 spring:
   datasource:
     url: jdbc:h2:file:./mydb;AUTO_SERVER=TRUE
@@ -73,3 +74,21 @@ person:
       groupSize: 10
 #  gender: X
 #  address: warsaw
+
+
+# actuator
+management:
+  endpoints:
+#    access:
+#      default: none
+    web:
+      exposure:
+        include: "*"
+        exclude:
+  endpoint:
+    shutdown:
+      access: unrestricted
+    heapdump:
+      access: unrestricted
+    env:
+      show-values: always
