@@ -2,10 +2,9 @@ package com.example.quizapp.lesson.cache;
 
 import lombok.val;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import static com.example.quizapp.lesson.cache.Constants.HEADER_USERNAME;
 
 @RestController
 @RequestMapping("/game")
@@ -18,14 +17,14 @@ public class GameController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<?> startGame(@RequestBody GameInput gameInput) {
-        val people = gameService.startGame(gameInput);
+    public ResponseEntity<?> startGame(@RequestBody GameInput gameInput, @RequestHeader(HEADER_USERNAME) String username) {
+        val people = gameService.startGame(gameInput, username);
 
         return ResponseEntity.ok(people);
     }
 
     @PostMapping("/answer")
-    public ResponseEntity<?> answer(@RequestBody AnswerInput answerInput) {
-        return ResponseEntity.ok(gameService.submitAnswer(answerInput));
+    public ResponseEntity<?> answer(@RequestBody AnswerInput answerInput, @RequestHeader(HEADER_USERNAME) String username) {
+        return ResponseEntity.ok(gameService.submitAnswer(answerInput, username));
     }
 }
