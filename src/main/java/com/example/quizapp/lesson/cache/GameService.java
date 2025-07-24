@@ -1,6 +1,8 @@
 package com.example.quizapp.lesson.cache;
 
+import lombok.SneakyThrows;
 import lombok.val;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -53,6 +55,13 @@ public class GameService {
             pendingGamePerUserMap.remove(username);
             return result;
         }
+    }
+
+    @SneakyThrows
+    @Cacheable("ints")
+    public Integer getInt(int id) {
+        Thread.sleep(2000);
+        return new Random().nextInt(700);
     }
 
 }
