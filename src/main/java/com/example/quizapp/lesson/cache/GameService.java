@@ -2,7 +2,10 @@ package com.example.quizapp.lesson.cache;
 
 import lombok.SneakyThrows;
 import lombok.val;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -58,10 +61,65 @@ public class GameService {
     }
 
     @SneakyThrows
-    @Cacheable("ints")
+    @Caching(
+        cacheable = {
+            @Cacheable(value = "ints", condition = "#id < 100"),
+            @Cacheable(value = "ints-wszystkie")
+        }
+    )
     public Integer getInt(int id) {
-        Thread.sleep(2000);
-        return new Random().nextInt(700);
+        Thread.sleep(2000); // pobranie z bazy danych
+        int ret = new Random().nextInt(700);
+
+        return ret;
     }
 
+    @Cacheable(value = "ints", unless = "#result == null")
+    public Integer getIntOnly(int id) {
+        return null;
+    }
+
+    @CachePut("ints")
+    public Integer putInt(int id) {
+        return -id;
+    }
+
+    @CacheEvict("ints")
+    public void evictInt(int id) {
+    }
+
+    @CacheEvict(value = "ints", allEntries = true)
+    public void evictIntAll() {
+    }
 }
+
+
+/**
+ *
+ *  Mateusz - dzis o 20
+ *  Quiz Astronomia
+ *  4) Jaka jest 6 planeta?
+ *  - Mars
+ *  - Jowisz
+ *  17) Ile jest gwiazd na niebie?
+ *  - 100
+ *  - 4 500 000
+ *  Koniec gry
+ *  zdobyto punktów 0
+ *
+ *
+ *  QUIZY
+ *  1 Astronomia
+ *  2 Geografia
+ *
+ * PYTANIA
+ * ID_QUIZU, ID_PYTANIA, PYTANIE, ODPOWIEDZI
+ * 1, 1, Którą planeta jest Ziemia, 3
+ * ...
+ * 1, 4, Jaka jest szósta planeta?, Jowisz
+ *
+ *
+ * GAME_HISTORY
+ * Jaka jest szósta planeta?, Jowisz , Mars
+ *
+ */

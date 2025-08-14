@@ -38,7 +38,32 @@ public class GameController {
         System.out.println("start " + LocalDateTime.now());
         var i = gameService.getInt(id);
         System.out.println("end " + LocalDateTime.now());
-
         return ResponseEntity.ok(i);
+    }
+
+    @GetMapping("/cacheOnly")
+    public ResponseEntity<Integer> cacheOnly(@RequestParam Integer id) {
+        System.out.println("start " + LocalDateTime.now());
+        var i = gameService.getIntOnly(id);
+        System.out.println("end " + LocalDateTime.now());
+        return ResponseEntity.ok(i);
+    }
+
+    @GetMapping("/cachePut")
+    public ResponseEntity<String> cachePut(@RequestParam Integer id) {
+        gameService.putInt(id);
+        return ResponseEntity.ok("Dodano");
+    }
+
+    @GetMapping("/cacheEvict")
+    public ResponseEntity<String> cacheEvict(@RequestParam Integer id) {
+        gameService.evictInt(id);
+        return ResponseEntity.ok("Usunieto");
+    }
+
+    @GetMapping("/cacheEvictAll")
+    public ResponseEntity<String> cacheEvict2() {
+        gameService.evictIntAll();
+        return ResponseEntity.ok("Usunieto");
     }
 }
