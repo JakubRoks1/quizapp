@@ -3,8 +3,8 @@
 
 spring:
 #  cache:
+#    cache-names: ints, books, foods
 #    type: simple
-#    cache-names: ints
   datasource:
     url: jdbc:h2:file:./mydb;AUTO_SERVER=TRUE
     driver-class-name: org.h2.Driver

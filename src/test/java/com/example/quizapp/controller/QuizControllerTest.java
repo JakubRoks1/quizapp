@@ -1,7 +1,5 @@
 package com.example.quizapp.controller;
 
-import com.example.quizapp.exception.ExceptionType;
-import com.example.quizapp.exception.QuizAppException;
 import com.example.quizapp.fixtures.QuizFixtures;
 import com.example.quizapp.mappers.ErrorMapperImpl;
 import com.example.quizapp.mappers.QuizMapper;
@@ -28,22 +26,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.boot.autoconfigure.AutoConfigurationPackages.get;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**

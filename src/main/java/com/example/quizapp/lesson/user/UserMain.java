@@ -1,18 +1,9 @@
 package com.example.quizapp.lesson.user;
 
-import lombok.val;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
 //@SpringBootApplication
 public class UserMain {
 
-    private final PasswordEncoder passwordEncoder = Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
+  /*  private final PasswordEncoder passwordEncoder = NoOpPasswordEncoder.getInstance();
 
     private final Map<String, User> savedUsers = new HashMap<>();
     private final Map<String, User> loggedUsers = new HashMap<>();
@@ -120,5 +111,5 @@ public class UserMain {
         }
 
         System.out.println("Witaj w panelu admina " + user.login());
-    }
+    }*/
 }
