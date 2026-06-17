@@ -3,8 +3,10 @@ package com.example.quizapp.lesson.cachetwo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,5 +42,16 @@ public class CacheController {
 //        cacheManager.getCache("books").
 
         return ResponseEntity.ok(randomBook);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCache(@PathVariable int id) {
+        return ResponseEntity.ok(cacheService.updateBookInCache(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> evictCache(@PathVariable int id) {
+        cacheService.evictBookFromCache(id);
+        return ResponseEntity.ok("Evicted book " + id);
     }
 }
