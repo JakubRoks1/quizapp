@@ -90,4 +90,9 @@ public class QuestionController {
 
         return ResponseEntity.ok(questionFilteredJsons);
     }
+
+    @GetMapping("/test-error")
+    public void testError() {
+        questionService.testException();
+    }
 }

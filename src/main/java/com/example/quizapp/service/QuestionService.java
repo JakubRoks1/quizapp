@@ -109,5 +109,9 @@ public class QuestionService {
         }
     }
 
+    public void testException() {
+        throw new IllegalArgumentException("Test AOP");
+    }
+
 
 }
