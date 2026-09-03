@@ -28,7 +28,7 @@ public class MyAspect {
 //    }
 
 //    @Before("testPointcut()")
-    @Before("execution(* com.example.quizapp.lesson.aop.MyTestController.o*())")
+    @Before(value = "execution(* com.example.quizapp.lesson.aop.MyTestController.o*())")
     public void before() {
         log.info("jestem przed czyms");
     }
@@ -47,6 +47,20 @@ public class MyAspect {
         var end = LocalDateTime.now();
         log.warn("Czas zakonczenia: {}, czas trwania {}", end, Duration.between(now, end).toNanos());
 
+        return result;
+    }
+
+//    @Before(value = "execution(* com.example.quizapp.lesson.aop.MyTestController.a4(..)) && args(value, value2)")
+//    public void before2(JoinPoint joinPoint, int value, int value2) {
+//        log.info("jestem przed a4 :{} {}", value, value2);
+////        log.info("{}", joinPoint.getArgs());
+//    }
+
+    @Around(value = "execution(* com.example.quizapp.lesson.aop.MyTestController.a4(..)) && args(value, value2)")
+    public Object around2(ProceedingJoinPoint proceedingJoinPoint, int value, int value2) throws Throwable {
+        log.info("jestem przed a4-around :{} {}", value, value2);
+        var result = proceedingJoinPoint.proceed(new Object[]{0, 0});
+//        log.info("{}", joinPoint.getArgs());
         return result;
     }
 }

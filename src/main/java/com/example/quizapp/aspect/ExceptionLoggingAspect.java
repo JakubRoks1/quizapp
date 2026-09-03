@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 public class ExceptionLoggingAspect {
 
     @AfterThrowing(pointcut = "execution(public * com.example.quizapp..*(..))", throwing = "exception")
-
     public void logException(JoinPoint joinPoint, Throwable exception) {
 
         String className = joinPoint.getSignature()
