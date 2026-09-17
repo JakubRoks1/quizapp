@@ -28,10 +28,15 @@ server:
     include-exception: true
     include-message: always
     include-stacktrace: always
+#debug: true
 
-logging:
-  level:
-    root: INFO
+
+
+#logging:
+#  level:
+#    com.example.quizapp.lesson.aop.MyAspect: TRACE
+#    com.example.quizapp: WARN
+#    root: INFO
 
 #debug: true
 
