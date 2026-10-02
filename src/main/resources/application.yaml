@@ -31,7 +31,6 @@ server:
 #debug: true
 
 
-
 #logging:
 #  level:
 #    com.example.quizapp.lesson.aop.MyAspect: TRACE

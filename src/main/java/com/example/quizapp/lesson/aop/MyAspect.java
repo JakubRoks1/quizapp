@@ -41,6 +41,12 @@ public class MyAspect {
     @Around("@annotation(com.example.quizapp.lesson.aop.TimedLogged)")
     public Object aroundTimed(ProceedingJoinPoint joinPoint) throws Throwable {
 
+        log.trace("To jest trace");
+        log.debug("To jest debug");
+        log.info("To jest info");
+        log.warn("To jest warn");
+        log.error("To jest error");
+
         var now = LocalDateTime.now();
         log.warn("Czas rozpoczecia: {}", now);
         var result = joinPoint.proceed();
