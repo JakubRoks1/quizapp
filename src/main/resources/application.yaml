@@ -5,6 +5,7 @@ spring:
   messages:
     basename: constraints
     fallback-to-system-locale: false
+    use-code-as-default-message: true
   cache:
 #    cache-names: ints, books, foods
     type: caffeine
